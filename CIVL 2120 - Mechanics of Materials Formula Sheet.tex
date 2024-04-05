@@ -1,0 +1,383 @@
+\documentclass[twoside]{article}
+
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\usepackage{layout}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{fourier-orns}
+\usepackage{fontawesome5}
+\usepackage[skip=\bigskipamount,indent]{parskip} % bigskip between paragraphs
+
+\geometry{left = 1.5in, right = 1.5in, headheight = 1.75cm} % Set page margins
+
+\definecolor{RoyalBlue}{HTML}{16348C} % Section title colour
+\definecolor{DeepPurple}{HTML}{440150} % Subsection title colour
+
+\newlength\titleindent
+\setlength\titleindent{3em} % Title indentations
+\setlength\parindent{0pt} % No indent for all paragraphs
+
+\titleformat{\section}{\normalfont\Large\bfseries\color{RoyalBlue}}{\llap{\parbox{\titleindent}{\thesection\hfill}}}{0em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries\color{DeepPurple}}{\llap{\parbox{\titleindent}{\thesubsection\hfill}}}{0em}{}
+
+% Define blue text
+\newcommand{\highlightbluetext}[1]{\textcolor[HTML]{09ACA6}{\textbf{#1}}}
+
+
+\begin{document}
+	
+	\begin{titlepage}
+		\centering
+		\scshape
+		\vspace*{\baselineskip}
+		
+		\rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt} % Thick horizontal rule
+		\rule{\textwidth}{0.4pt} % Thin horizontal rule
+		
+		\vspace{0.5\baselineskip}
+		
+		{\LARGE \textbf{CIVL 2120 \\ Mechanics of Materials} \\
+		
+		\vspace{0.75\baselineskip}
+		\Large Formula Sheet}
+		
+		\vspace{0.5\baselineskip} % Whitespace below the title
+		
+		\rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt} % Thin horizontal rule
+		\rule{\textwidth}{1.6pt} % Thick horizontal rule
+		
+		\vspace*{2\baselineskip} % Whitespace under the subtitle
+		
+		{\Large Edited by
+		
+		\Large LongKit \\
+		\vspace{7.5pt}
+			\small \normalfont \faGithub \hspace{2.5pt} @gottabewithyou \\
+			\vspace{10pt}
+			\large \textit{The Hong Kong University of Science and Technology}}
+		
+		\vspace{10\baselineskip}
+		
+		\textit{Last Edited: April 2024}
+		
+	\end{titlepage}
+	
+	\newpage
+	
+	% Configure the headers and footers
+	\pagestyle{fancy}
+	\fancyhf{}
+	\fancyhead[C]{\large \textbf{CIVL 2120 - Mechanics of Materials} \\ Formula Sheet}
+	\renewcommand{\headrule}{%
+		\vspace{1pt}\hrulefill
+		\raisebox{-2.1pt}{\quad \floweroneleft \decotwo \floweroneright \quad}\hrulefill}
+	
+	\fancyfoot{}
+	\fancyfoot[LO, RE]{\faGithub \hspace{2.5pt} @gottabewithyou}
+	\fancyfoot[RO, LE]{\thepage}
+	\renewcommand{\footrule}{%
+		\vspace{26pt}\hrulefill
+		\raisebox{-2.1pt}{\quad \decofourleft \decotwo \decofourright \quad}\hrulefill}
+	
+	\setcounter{page}{1}
+	
+	\section{Stress}
+	
+	\subsection{Normal Stress}
+
+	\begin{equation}
+		\sigma = \frac{P}{A}
+		\label{eq:NormalStress}
+	\end{equation}
+	Positive sign indicates tensile stress, negative sign indicates compressive stress.
+	\begin{equation}
+		P = \int_A \sigma \, dA
+		\label{eq:NormalStressIntegral}
+	\end{equation}
+	
+	\subsection{Shearing Stress}
+
+	\begin{equation}
+		\tau = \frac{P}{A}
+		\label{eq:ShearingStress}
+	\end{equation}
+	
+	\subsection{Bearing Stress}
+
+	\begin{equation}
+		\sigma_b = \frac{P}{A} = \frac{P}{td}
+		\label{eq:BearingStress}
+	\end{equation}
+	where $t$ is the thickness of the plate and $d$ is the diameter of the bolt. We use the \highlightbluetext{projected area} of the bolt on the plate, instead of the curved surface directly.
+	
+	\subsection{Stresses on Oblique Plane}
+	
+	Normal Stress
+	\begin{equation}
+		\sigma_\theta = \frac{F}{A_\theta} = \frac{P}{A_0} \cos^2 \theta
+		\label{eq:NormalStressOblique}
+	\end{equation}
+	Shearing Stress
+	\begin{equation}
+		\tau_\theta = \frac{V}{A_\theta} = \frac{P}{A_0} \sin \theta \cos \theta
+		\label{eq:ShearingStressOblique}
+	\end{equation}
+	where $F = P \cos \theta$ is the force \highlightbluetext{normal} to the plane, $V = P \sin \theta$ is the force \highlightbluetext{tangential} to the plane, and $\theta$ is the angle between the force $P$ and the normal of the plane.
+	
+	\subsection{Factor of Safety}
+	
+	\begin{equation}
+		FS = \frac{P_\text{ultimate}}{P_\text{allow}} = \frac{\sigma_\text{ultimate}}{\sigma_\text{allow}}
+		\label{eq:FactorOfSafety}
+	\end{equation}
+	
+	\newpage
+	
+	\section{Axial Loading}
+	
+	\subsection{Normal Strain}
+	
+	\begin{equation}
+		\epsilon = \frac{\delta}{L}
+		\label{eq:NormalStrain}
+	\end{equation}
+	
+	\subsection{Hooke's Law}
+	
+	\begin{equation}
+		\sigma = E \epsilon
+		\label{eq:HookesLaw}
+	\end{equation}
+	where $E$ is the Young's modulus.
+	
+	\subsection{Deformation}
+	
+	\begin{equation}
+		\delta = \frac{PL}{EA}
+		\label{eq:Deformation}
+	\end{equation}
+	For multiple rods in series,
+	\begin{equation}
+		\delta = \sum_i \frac{P_i L_i}{E_i A_i}
+		\label{eq:DeformationSeries}
+	\end{equation}
+	For multiple rods in parallel,
+	\begin{equation}
+		\delta = \frac{PL}{\sum_i E_i A_i}
+		\label{eq:DeformationParallel}
+	\end{equation}
+	
+	\subsection{Poisson's Ratio}
+	
+	\begin{equation}
+		\nu = -\frac{\text{lateral strain}}{\text{axial strain}} = -\frac{\epsilon_y}{\epsilon_x} = -\frac{\epsilon_z}{\epsilon_x}
+		\label{eq:PoissonsRatio}
+	\end{equation}
+	
+	\begin{equation}
+		\begin{cases}
+			\epsilon_x &= \frac{\sigma_x}{E} \\
+			\epsilon y &= \epsilon_z = -\frac{\nu \sigma_x}{E}
+		\end{cases}
+		\label{eq:LateralAndAxialStrain}
+	\end{equation}
+	
+	Note that $0 < \nu < \frac{1}{2}$.
+	
+	\subsection{Generalised Hooke's Law}
+	
+	\begin{equation}
+		\begin{cases}
+			\epsilon_x = \frac{\sigma_x}{E}-\frac{\nu \sigma_y}{E}-\frac{\nu \sigma_z}{E} \\
+			\epsilon_y = -\frac{\nu \sigma_x}{E}+\frac{\sigma_y}{E}-\frac{\nu \sigma_z}{E} \\
+			\epsilon_z = -\frac{\nu \sigma_x}{E}-\frac{\nu \sigma_y}{E}+\frac{\sigma_z}{E}
+		\end{cases}
+		\label{GeneralisedHookesLaw}
+	\end{equation}
+	Or in a more compact matrix form
+	\begin{equation}
+		\begin{bmatrix}
+			\epsilon_x \\
+			\epsilon_y \\
+			\epsilon_z
+		\end{bmatrix}
+		= \frac{1}{E}
+		\begin{bmatrix}
+			1 & -\nu & -\nu \\
+			-\nu & 1 & -\nu \\
+			-\nu & -\nu & 1
+		\end{bmatrix}
+		\begin{bmatrix}
+			\sigma_x \\
+			\sigma_y \\
+			\sigma_z
+		\end{bmatrix}
+		\label{eq:GeneralisedHookesLawMatrix}
+	\end{equation}
+	
+	\subsection{Dilatation}
+	
+	\begin{align}
+		\begin{split}
+			e &= \epsilon_x+\epsilon_y+\epsilon_z \\
+			  &= \frac{1-2\nu}{E} (\sigma_x+\sigma_y+\sigma+z)
+			  \label{eq:Dilataion}
+		\end{split}
+	\end{align}
+	Under uniform pressure
+	\begin{equation}
+		e = -\frac{2(1-2\nu)}{E} p
+		\label{eq:DilatationPressure}
+	\end{equation}
+	
+	\subsection{Bulk Modulus}
+	
+	\begin{equation}
+		k = \frac{E}{3(1-2\nu)}
+		\label{eq:BulkModulus}
+	\end{equation}
+	
+	\begin{equation}
+		e = -\frac{p}{k}
+		\label{eq:DilataionAndBulkModulus}
+	\end{equation}
+	
+	\newpage
+	
+	\section{Torsion}
+	
+	\subsection{Stress and Torque}
+	
+	\begin{equation}
+		\int \rho \, dF = \int \rho \tau \, dA = T
+		\label{eq:StressAndTorque}
+	\end{equation}
+	
+	\subsection{Shearing Strain}
+	
+	\begin{equation}
+		\gamma = \frac{\rho \phi}{L}
+		\label{eq:ShearingStrainTwist}
+	\end{equation}
+	where $\phi$ is the angle of twist.
+	\begin{equation}
+		\gamma_\text{max} = \frac{c \phi}{L}
+		\label{eq:SheaingStrainTwistMax}
+	\end{equation}
+	where $c$ is the outer radius.
+	
+	\subsection{Hooke's Law for Twisting}
+	
+	\begin{equation}
+		\tau = G \gamma
+		\label{eq:HookesLawTwist}
+	\end{equation}
+	c.f. Equation \ref{eq:HookesLaw}
+	\begin{equation*}
+		\sigma = E \epsilon
+	\end{equation*}
+	
+	
+	\subsection{Shearing Stress}
+	
+	\begin{equation}
+		\tau = \frac{T \rho}{J}
+		\label{eq:ShearingStressTwist}
+	\end{equation}
+	where $J$ is the polar moment of inertia.
+	\begin{equation}
+		\tau_\text{max} = \frac{Tc}{J}
+		\label{eq:ShearingStressTwistMax}
+	\end{equation}
+	
+	\subsection{Polar Moment of Inertia}
+	\begin{equation}
+		J = \int_A r^2 \, dA
+		\label{eq:PolarMomentOfInertia}
+	\end{equation}
+	For hollow cylinders,
+	\begin{equation}
+		J = \frac{1}{2} \pi \left( c_2^2-c_1^2 \right)
+		\label{eq:PolarMomentOfInertiaCylinder}
+	\end{equation}
+	
+	\subsection{Angle of Twist}
+	\begin{equation}
+		\phi = \frac{TL}{GJ}
+		\label{eq:AngleOfTwist}
+	\end{equation}
+	where $G$ is the modulus of rigidity.
+	
+	c.f. Equation \ref{eq:Deformation}
+	\begin{equation*}
+		\delta = \frac{PL}{EA}
+	\end{equation*}
+	For multiple components in series,
+	\begin{equation}
+		\phi = \sum_i \frac{T_i L_i}{G_i J_i}
+		\label{eq:AngleOfTwistSeries}
+	\end{equation}
+	
+	\newpage
+	
+	\section{Pure Bending}
+	
+	\subsection{Strain Due to Bending}
+	
+	\begin{equation}
+		\epsilon_x = -\frac{y}{\rho}
+		\label{eq:BendingStrain}
+	\end{equation}
+	where $y$ is the signed distance measured from the neutral axis.
+	
+	\subsection{Stress Due to Bending}
+	
+	\begin{equation}
+		\sigma_x = -\frac{My}{I}
+		\label{eq:BendingStress}
+	\end{equation}
+	\begin{equation}
+		\sigma_{x_\text{max}} = -\frac{Mc}{I}
+		\label{eq:BendingStressMax}
+	\end{equation}
+	
+	\subsection{Section Modulus}
+	
+	\begin{equation}
+		S = \frac{I}{c}
+		\label{eq:SectionModulus}
+	\end{equation}
+	
+	\subsection{Radius of Curvature}
+	
+	\begin{equation}
+		\rho = \frac{EI}{M}
+		\label{eq:RadiusOfCurvature}
+	\end{equation}
+	The reciprocal $\frac{1}{\rho}$ is the curvature of the neutral surface.
+	
+	\subsection{Eccentric Loading}
+	
+	\begin{equation}
+		\sigma_x = \frac{P}{A}-\frac{My}{I}
+		\label{eq:EccentricLoading}
+	\end{equation}
+	For couples acting not on the plane of symmetry,
+	\begin{equation}
+		\sigma_x = \frac{P}{A}+\frac{M_z y}{I_z}-\frac{M_y z}{I_y}
+		\label{eq:EccentricLoadingGeneral}
+	\end{equation}
+	The negative sign in the $M_z$ term is due to the compression above the $xz$ plane (in the positive $y$ axis) and tension below (in the negative $y$ axis). The $M_y$ term is positive because of the tension on the left of the $xy$ plane (in the positive $z$ axis) and compression on the right (in the negative $z$ axis).
+	
+	\subsection{Neutral Axis}
+	
+	\begin{equation}
+		\tan \phi = \frac{I_z}{I_y} \tan \theta
+		\label{eq:NeutralAxisAngle}
+	\end{equation}
+	
+\end{document}
