@@ -1,5 +1,6 @@
 \documentclass[twoside]{article}
 
+\usepackage{hyperref}
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{amsmath}
@@ -16,6 +17,7 @@
 
 \definecolor{RoyalBlue}{HTML}{16348C} % Section title colour
 \definecolor{DeepPurple}{HTML}{440150} % Subsection title colour
+\definecolor{MidnightBlue}{HTML}{191970} % Hyperlink colour
 
 \newlength\titleindent
 \setlength\titleindent{3em} % Title indentations
@@ -26,6 +28,11 @@
 
 % Define blue text
 \newcommand{\highlightbluetext}[1]{\textcolor[HTML]{09ACA6}{\textbf{#1}}}
+
+\hypersetup{
+	colorlinks=true,
+	urlcolor=MidnightBlue,
+}
 
 
 \begin{document}
@@ -56,7 +63,7 @@
 		
 		\Large LongKit \\
 		\vspace{7.5pt}
-			\small \normalfont \faGithub \hspace{2.5pt} @gottabewithyou \\
+			\small \normalfont \href{https://github.com/gottabewithyou}{\faGithub \hspace{2.5pt} @gottabewithyou} \\
 			\vspace{10pt}
 			\large \textit{The Hong Kong University of Science and Technology}}
 		
@@ -77,7 +84,7 @@
 		\raisebox{-2.1pt}{\quad \floweroneleft \decotwo \floweroneright \quad}\hrulefill}
 	
 	\fancyfoot{}
-	\fancyfoot[LO, RE]{\faGithub \hspace{2.5pt} @gottabewithyou}
+	\fancyfoot[LO, RE]{\href{https://github.com/gottabewithyou}{\faGithub \hspace{2.5pt} @gottabewithyou}}
 	\fancyfoot[RO, LE]{\thepage}
 	\renewcommand{\footrule}{%
 		\vspace{26pt}\hrulefill
