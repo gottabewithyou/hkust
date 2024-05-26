@@ -1,0 +1,1687 @@
+\documentclass[twoside]{article}
+
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{siunitx}
+\usepackage{layout}
+\usepackage{titlesec}
+\usepackage{etoolbox}
+\usepackage{cancel}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage[skip=\bigskipamount, indent]{parskip} % bigskip between paragraphs
+\usepackage{lipsum}
+\usepackage[most]{tcolorbox}
+\usepackage{emoji}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{calc}
+\usepackage{hyperref}
+\usepackage{fourier-orns}
+\usepackage{fontawesome5}
+\usepackage{fancyhdr}
+
+
+\geometry{left = 1.5in, right = 1.5in} % Set page margins
+
+\definecolor{RoyalBlue}{HTML}{16348C} % Section title colour
+\definecolor{DeepPurple}{HTML}{440150} % Subsection title colour
+\definecolor{DeepLavendar}{HTML}{7373E3} % Question box boundary colour
+\definecolor{Lavendar}{HTML}{E6E6FA} % Question box colour
+\definecolor{DeepTeaGreen}{HTML}{62C92F} % Answer box boundary colour
+\definecolor{TeaGreen}{HTML}{D1F5BF} % Answer box colour
+\definecolor{DeepBubbleGumBlue}{HTML}{57CEEE} % Remarks box boundary colour
+\definecolor{BubbleGumBlue}{HTML}{CDF9FA} % Remarks box colour
+\definecolor{Cream}{HTML}{FDFCC3} % Derivation box colour
+\definecolor{DeepCream}{HTML}{FBF65E} % Derivation box boundary colour
+\definecolor{Almond}{HTML}{F4E7DB} % Example box colour
+\definecolor{DeepAlmond}{HTML}{E0BE9C} % Example box boundary colour
+\definecolor{MidnightBlue}{HTML}{191970} % Hyperlink colour
+\definecolor{CobaltBlue}{HTML}{0047AB} % Reference colour
+
+
+\newlength\titleindent
+\setlength\titleindent{3em} % Title indentations
+\setlength\parindent{0pt} % No indent for all paragraphs
+
+\titleformat{\section}{\normalfont\Large\bfseries\color{RoyalBlue}}{\llap{\parbox{\titleindent}{\thesection\hfill}}}{0em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries\color{DeepPurple}}{\llap{\parbox{\titleindent}{\thesubsection\hfill}}}{0em}{}
+
+\pgfplotsset{compat = 1.18}
+
+\hypersetup{
+	colorlinks = true,
+	urlcolor = MidnightBlue,
+	linkcolor = CobaltBlue,
+}
+
+% Define the volume symbol
+\makeatletter
+\DeclareRobustCommand{\vol}{\text{\volumedash}V}
+\newcommand{\volumedash}{%
+	\makebox[0pt][l]{%
+		\ooalign{\hfil\hphantom{$\m@th V$}\hfil\cr\kern0.16em\rotatebox{27.5}{\textbf{--}}\hfil\cr}%
+	}%
+}
+\makeatother
+
+
+% Define question box
+\newtcolorbox{questionbox}{enhanced, parbox = false, boxrule = 0mm, boxsep = 0mm,
+						   arc = 0mm, outer arc = 0mm,
+						   left = 4mm, right = 3mm, top = 7pt, bottom = 7pt,
+						   toptitle = 1mm, bottomtitle = 1mm, oversize,
+						   borderline west = {5pt}{0pt}{DeepLavendar}, colback = Lavendar}
+\newcommand{\question}[1]{\begin{questionbox} \emoji{grapes} \textbf{Think!} \newline #1 \end{questionbox}}
+
+% Define answer box
+\newtcolorbox{answerbox}{enhanced, parbox = false, boxrule = 0mm, boxsep = 0mm,
+	arc = 0mm, outer arc = 0mm,
+	left = 4mm, right = 3mm, top = 7pt, bottom = 7pt,
+	toptitle = 1mm, bottomtitle = 1mm, oversize,
+	borderline west = {5pt}{0pt}{DeepTeaGreen}, colback = TeaGreen}
+\newcommand{\answer}[1]{\begin{answerbox} \emoji{melon} \textbf{Answer} \newline #1 \end{answerbox}}
+
+% Define remarks box
+\newtcolorbox{remarksbox}{enhanced, parbox = false, boxrule = 0mm, boxsep = 0mm,
+	arc = 0mm, outer arc = 0mm,
+	left = 4mm, right = 3mm, top = 7pt, bottom = 7pt,
+	toptitle = 1mm, bottomtitle = 1mm, oversize,
+	borderline west = {5pt}{0pt}{DeepBubbleGumBlue}, colback = BubbleGumBlue}
+\newcommand{\remarks}[1]{\begin{remarksbox} \emoji{blueberries} \textbf{Remarks} \newline #1 \end{remarksbox}}
+
+% Define derivation box
+\newtcolorbox{derivationbox}{enhanced, parbox = false, boxrule = 0mm, boxsep = 0mm,
+	arc = 0mm, outer arc = 0mm,
+	left = 4mm, right = 3mm, top = 7pt, bottom = 7pt,
+	toptitle = 1mm, bottomtitle = 1mm, oversize,
+	borderline west = {5pt}{0pt}{DeepCream}, colback = Cream}
+\newcommand{\derivation}[1]{\begin{derivationbox} \emoji{pineapple} \textbf{Equation Derivation} \newline #1 \end{derivationbox}}
+
+% Define derivation box
+\newtcolorbox{examplebox}{enhanced, parbox = false, boxrule = 0mm, boxsep = 0mm,
+	arc = 0mm, outer arc = 0mm,
+	left = 4mm, right = 3mm, top = 7pt, bottom = 7pt,
+	toptitle = 1mm, bottomtitle = 1mm, oversize,
+	borderline west = {5pt}{0pt}{DeepAlmond}, colback = Almond}
+\newcommand{\example}[1]{\begin{examplebox} \emoji{croissant} \textbf{Example} \newline #1 \end{examplebox}}
+
+% Define blue text
+\newcommand{\highlightbluetext}[1]{\textcolor[HTML]{09ACA6}{\textbf{#1}}}
+
+% Numbers with circle
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{\node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\numberwithin{equation}{section}
+
+\begin{document}
+	\begin{titlepage}
+		\centering
+		\scshape
+		\vspace*{\baselineskip}
+		
+		\rule{\textwidth}{1.6pt}\vspace{-\baselineskip}\vspace{2pt} % Thick horizontal rule
+		\rule{\textwidth}{0.4pt} % Thin horizontal rule
+		
+		\vspace{0.5\baselineskip}
+		
+		{\LARGE \textbf{CIVL 2510 \\ Fluid Dynamics} \\
+			
+			\vspace{0.75\baselineskip}
+			\Large Notes}
+		
+		\vspace{0.5\baselineskip}
+		
+		\rule{\textwidth}{0.4pt}\vspace{-\baselineskip}\vspace{3.2pt} % Thin horizontal rule
+		\rule{\textwidth}{1.6pt} % Thick horizontal rule
+		
+		\vspace{1.5\baselineskip}
+		
+		{\large Insturctor: Mohamed S. Ghidaoui \\
+			\vspace{0.5\baselineskip} Spring 2024}
+		
+		\vspace{\baselineskip}
+		
+		{\Large Edited by \\
+			\vspace{0.5\baselineskip}
+			\Large LongKit \\
+			\vspace{0.5\baselineskip}
+			\small \normalfont \href{https://github.com/gottabewithyou}{\faGithub \hspace{2.5pt} @gottabewithyou} \\
+			\small \normalfont \href{mailto:lkyauaa@connect.ust.hk}{\faEnvelope \hspace{2.5pt} lkyauaa@connect.ust.hk} \\
+			\vspace{10pt}
+			\large \textit{The Hong Kong University of Science and Technology}}
+		
+		\vspace{10\baselineskip}
+		
+		\textit{Last Edited: May 2024}
+		
+	\end{titlepage}
+	
+	\newpage
+	
+	% Configure the headers and footers
+	\pagestyle{fancy}
+	\fancyhf{}
+	\renewcommand{\headrulewidth}{0pt}
+	\fancyhead[C]{\large \textbf{CIVL 2510 - Fluid Dynamics}}
+	
+	\fancyfoot{}
+	\fancyfoot[LO, RE]{\href{https://github.com/gottabewithyou}{\faGithub \hspace{2.5pt} @gottabewithyou}}
+	\fancyfoot[RO, LE]{\thepage}
+	
+	\setcounter{page}{1}
+	
+	This note is made accordingly to \textbf{CIVL 2510 - Fluid Mechanics} by Professor Mohamed S. Ghidaoui at HKUST. It aims to improve the readability of the lecture notes provided, and to develop an introductory concept about fluid mechanics to the readers.
+	
+	Examples and questions in this notes are taken from lectures, example sets, assignments, and online materials. The textbook listed below is recommended by the Professor for this course.
+	\begin{itemize}
+		\item \emph{Fluid Mechanics} by Frank M. White
+	\end{itemize}
+	
+	\newpage
+	
+	\tableofcontents
+	
+	\newpage
+	
+	\section{Fluid Mechanics}
+	\label{sec:FluidMechanics}
+	
+	\subsection{What are Fluids?}
+	\label{subsec:WhatAreFluids}
+	
+	In this course, we mainly focus on fluids, and it is important to distinguish fluids from solids. Solid, liquid and gas differ in the way they respond to an imposed change.
+	\begin{itemize}
+		\item Solids and liquids are slightly compressible.
+		\item Solids can sustain some shear stress that the material is modified, while fluid molecules rearrange themselves to relieve the stress (flowing).
+		\item Fluids cannot resist any applied shear force.
+		\item Gases can take up all the volume of a container, and will expand when the volume increases.
+		\item Fluids adopt to the shape of the container holding it.
+	\end{itemize}
+	However, it is sometimes difficult to model a system to be completely "fluid" or "solid". We take a sloped hill as an example. A grain of soil, rocks, trees are all solids, but when landslide occurs, they slide like fluids. We therefore model landslides with principles from fluid mechanics.
+	
+	\question{Identify some other systems, consisting of solid particles, that can be modelled as fluid flow.}
+	
+	\answer{Lava flow, grain elevators, sand...}
+	
+	
+	\subsection{What is Mechanics?}
+	\label{subsec:WhatIsMechanics}
+	
+	Mechanics deals with \highlightbluetext{motion} and \highlightbluetext{forces} that produce that motion. We are interested in the response of a fluid to the forces applied on it. We can divide forces into two categories:
+	\begin{itemize}
+		\item \highlightbluetext{Surface Force}: Forces that can be only applied at the boundary of fluids, such as pressure or shear stress.
+		\item \highlightbluetext{Body Force}: Forces that can be applied everywhere within the body, such as gravitational forces.
+	\end{itemize}
+	One case is particularly interesting: When the sum of forces applied to a fluid equals zero, by the \emph{simplified version} of the Newton's second law,
+	\begin{equation}
+		\sum F_{\text{ext}} = ma
+		\label{eq:SimpleNewtonsLaw}
+	\end{equation}
+	the acceleration $a$ of the fluid will be zero. Therefore, the fluid will either \highlightbluetext{move at constant velocity}, or \highlightbluetext{stay stationary}, which is referred to as hydrostatics. It should be noted that \textbf{the above Equation \ref{eq:SimpleNewtonsLaw} is not the general case}. We will look into Newton's law thoroughly in the following sections.
+	
+	For reference, Newton's three laws of motions are stated here:
+	\begin{enumerate}
+		\item A body remains at rest, or moves with constant speed in a straight line, except being acted upon a force.
+		\item The net force on a body equals to the rate of change of momentum.
+			  \begin{equation}
+			  	\sum F_{\text{ext}} = \frac{D}{Dt} (mv)
+			  	\label{eq:NewtonsLaw}
+			  \end{equation}
+		\item If two bodies exert forces on each other, these forces have the same magnitude but opposite directions.
+	\end{enumerate}
+	In equation \ref{eq:NewtonsLaw}, the derivative notation $\frac{D}{Dt}$, as opposed to the conventional $\frac{d}{dt}$, is used to emphasise the idea of \highlightbluetext{\emph{material derivative}} (also known as the $\emph{Lagrangian derivative}$). The distinction between the \emph{material derivative}, \emph{general derivative} and \emph{partial derivative} will be discussed later.
+	
+	\newpage
+	
+	\section{Identification of Scales}
+	\label{sec:IdentificationOfScales}
+	
+	\subsection{Length Scales}
+	\label{subsec:LengthScales}
+	
+	A fluid can be observed at various length scales. Such scales are important for us to identify parameters to describe a fluid system. For example, if we look at each molecule of a fluid, we will observe millions of different velocities. It is difficult to assign a representative and meaningful velocity to the entire fluid. However, if we look at a large scale system, such as the water inside a pouring bottle, we can easily determine the flow rate of the fluid.
+	
+	We can then define three length scales: the \highlightbluetext{molecular scale} $\ell_{\text{mo}}$, the \highlightbluetext{microscale} $\ell_{\text{ml}}$, and the \highlightbluetext{system scale} $\ell^{\text{sy}}$. Their differences in order of magnitude are as follows:
+	\begin{equation}
+		\ell_{\text{mo}} \ll \ell_{\text{mi}} \ll \ell^{\text{sy}}
+		\label{eq:LengthScales}
+	\end{equation}
+	The precise values of these length scales cannot be determined as they depend on the system being studied. Nevertheless, we can still provide some useful insights regarding such scales. We use the molecular scale $\ell_{\text{mo}}$ for studying molecular interactions; the microscale $\ell_{\text{ml}}$ for varying properties throughout the fluid; and the system scale $\ell^{\text{sy}}$ for an average value for the entire fluid.
+	\begin{itemize}
+		\item $\ell_{\text{mo}}$: Order of $\num{e-7}$ for gas, \highlightbluetext{diameter of a molecule} ($\sim \num{3e-10}$) for liquid.
+		\item $\ell_{\text{ml}}$: In practice \highlightbluetext{1 to 2 orders} of magnitude larger than $\ell_{\text{mo}}$, but we also consider much larger scales.
+		\item $\ell^{\text{sy}}$: Varies according to the system being studied. The scale can differ in each coordinate axis.
+	\end{itemize}
+	
+	\question{Which scale should we use to determine the average flow rate over a cross-section of a channel?}
+	
+	\answer{System scale.}
+	
+	\subsection{Time Scales}
+	\label{subsec:TimeScales}
+	
+	We deal with various ranges of time scales in fluid mechanics, representing different ideas even in the same situation. For example, annual rainfall rate differs from hourly rainfall rate. If we are interested in the character of turbulence, we use small length and time scales.　In contrast, if we are interested in flooding and the flow rate of a river, we use large length and time scales.
+	
+	The first time scale type is the \highlightbluetext{general time scale}, denoted as $T_G$. It relates to the length or size of the system and a velocity.
+	\begin{itemize}
+		\item For a tank of water, $T_G$ is the time taken for one volume of the tank to flow in.
+		\item For a river, $T_G$ is the time taken for water to flow from one end to another.
+	\end{itemize}
+	Compare the travelling speed of a hurricane, river and groundwater. Hurricanes have a forward speed of $30 \unit{km/h}$, a river's velocity is of order $1 \unit{m/s} (3.6 \unit{km/h})$, and groundwater flow is of order 25 cm/d ($\num{1.04e-5}$ km/h). Thus we can observe that the general time scale for subsurface flows tend to be larger than that for surface flows.
+	
+	The second time scale type is the \highlightbluetext{thermodynamic time scale}, denoted as $T_T$. It refers to the time needed for a system to reach equilibrium. This scale is mathematically imprecise as most processes take infinite time to reach equilibrium.
+	
+	For example, a hot cup of coffee in room conditions will gradually approach room temperature, but it will never have the same temperature with the surroundings. Mathematically, the temperature drop can be modelled as an \highlightbluetext{exponential decay}. Nevertheless, such model can provide some insights as we can use it to calculate the time needed for 99\% of the temperature difference between the coffee and the surroundings to be dissipated. 
+	
+	\subsection{Continuum Scale}
+	\label{subsec:ContinuumScale}
+	
+	We do not model systems at a molecular scale. Instead, we consider a fluid to be continuum, that is, involving \highlightbluetext{gradual and smooth} but not abrupt varying properties at microscale. Note that we can divide one system into several continuum regions. We need to apply equations for each region in this case.
+	
+	\newpage
+	
+	\section{Derivatives}
+	\label{sec:Derivatives}
+	
+	\subsection{Material Derivative}
+	\label{subsec:MaterialDerivative}
+	
+	Introduced in Subsection \ref{subsec:WhatIsMechanics}, material derivative is used when we only want to look at the \highlightbluetext{same body of mass}. When the body moves, we (the observer) follows. It's denoted by $\frac{D}{Dt}$. In Subsection \ref{subsec:WhatIsMechanics}, the Newton's second law is written as
+	\begin{equation*}
+		\sum F_{\text{ext}} = \frac{D}{Dt} (mv)
+	\end{equation*}
+	This is because we only look at the motion of the same body.
+	
+	Note that the \highlightbluetext{elementary rules of differentiation}, including product rule, quotient rule and chain rule, also apply to the material derivative. The simplified version of the Newton's second law for conserved mass can be therefore derived as follows.
+	\begin{align*}
+		\sum \vec{F}_{\text{ext}} &= \frac{D}{Dt} (m \vec{v}) \\
+		&= \cancelto{0}{\vec{v} \frac{D}{Dt} m}+m \frac{D}{Dt} \vec{v} \\
+		&= m \frac{D}{Dt} \vec{v} \\
+		&= ma
+	\end{align*}
+	
+	\subsection{Partial Derivative}
+	\label{subsec:PartialDerivative}
+	
+	Partial derivative is used when the observer's location is \highlightbluetext{fixed}. If there is a function $f(x, y, z, t)$, partial derivative is considered when $x$, $y$, and $z$ do not change. It's denoted by $\frac{\partial}{\partial t}$.
+	
+	\subsection{General Derivative}
+	\label{subsec:GeneralDerivative}
+	
+	As suggested by its name, it's most general form among the three derivatives. General derivative is used when the observer is \highlightbluetext{neither stationary} nor \highlightbluetext{moving with the same speed} with the observed body. It's denoted by $\frac{d}{dt}$.
+	
+	\subsection{Relationship Between the Three Derivatives}
+	\label{subsec:RelationshipBetweenTheThreeDerivatives}
+	
+	We first consider the 1 dimensional case, that is, a particle can move along the $x$-axis only. The value at each point on the $x$-axis also varies with time $t$. Therefore, $f$ is a function of both $x$ and $t$.
+	
+	\derivation{
+		\begin{minipage}[c]{6cm}
+			\scalebox{0.8}{
+				\begin{tikzpicture}
+					\begin{axis}[axis lines = middle, y dir = reverse, only marks,
+						xmin = 0, xmax = 7, ymin = 0, ymax = 9, zmin = 0, zmax = 4,
+						zmajorticks = false,
+						xtick = {2, 6}, xticklabels = {$x_0$, $x_1$},
+						ytick = {3, 7}, yticklabels = {$t_0$, $t_1$},
+						x tick label style = {above right}, y tick label style = {above left},
+						xlabel = {$x$}, ylabel = {$t$}, zlabel = {$f(x,t)$},
+						x label style = {anchor = north east},
+						every axis y label/.append style = {at = (ticklabel* cs:0)},
+						every axis z label/.append style = {at = (ticklabel* cs:1)}
+						]
+						\addplot3 coordinates {(2, 3, 0) (2, 7, 0) (6, 7, 0)};
+						\node[label = {$A$}](point1) at (axis cs:2, 3, 0){};
+						\node[label = {$B$}](point2) at (axis cs:2, 7, 0){};
+						\node[label = {$C$}](point3) at (axis cs:6, 7, 0){};
+						\draw[->, >= stealth](point1) -- (point2);
+						\draw[->, >= stealth](point2) -- (point3);
+						\draw[dashed](point1) -- (axis cs:0, 3, 0);
+						\draw[dashed](point1) -- (axis cs:2, 0, 0);
+						\draw[dashed](point2) -- (axis cs:0, 7, 0);
+						\draw[dashed](point3) -- (axis cs:6, 0, 0);
+					\end{axis}
+				\end{tikzpicture}
+			}
+		\end{minipage}
+		\begin{minipage}[c]{\textwidth-6cm}
+			We would like to calculate the slope from $f(x_0, t_0)$ to $f(x, t)$. The slope is
+			\begin{equation}
+				m = \frac{f(x, t)-f(x_0, t_0)}{t-t_0}
+				\label{eq:GeneralDerivativeSlope}
+			\end{equation}
+			We take the limit where $x \to x_0$ and $t \to t_0$. Notice that Equation \ref{eq:GeneralDerivativeSlope} looks exactly like the first principle of differentiation. Thus, we can denote it using $\frac{df}{dt}$.
+			\begin{align*}
+				\frac{df}{dt} &= \lim_{t \to t_0} \frac{f(x, t)-f(x_0, t_0)}{t-t_0} \\
+							  &= \lim_{t \to t_0} \frac{f(x, t)-f(x_0, t)+f(x_0, t)-f(x_0, t_0)}{t-t_0} \\
+							  &= \lim_{t \to t_0} \left( \frac{f(x, t)-f(x_0, t)}{t-t_0}+\frac{f(x_0, t)-f(x_0, t_0)}{t-t_0} \right) \\
+							  &= \lim_{t \to t_0} \frac{f(x, t)-f(x_0, t)}{x-x_0} \cdot \frac{x-x_0}{t-t_0}+\frac{\partial f}{\partial t} \\
+							  &= \frac{\partial f}{\partial x} \cdot \frac{dx}{dt}+\frac{\partial f}{\partial t}
+			\end{align*}
+		\end{minipage}
+	}
+	
+	Similarly, for the 3D case, we have
+	\begin{equation}
+		\frac{df}{dt} = \frac{\partial f}{\partial t}+\frac{\partial f}{\partial x} \cdot \frac{dx}{dt}+\frac{\partial f}{\partial y} \cdot \frac{dy}{dt}+\frac{\partial f}{\partial z} \cdot \frac{dz}{dt}
+		\label{eq:GeneralDerivativeExpanded}
+	\end{equation}
+	cf.
+	\begin{equation}
+		\frac{Df}{Dt} = \frac{\partial f}{\partial t}+u \frac{\partial f}{\partial x}+v \frac{\partial f}{\partial y}+w \frac{\partial f}{\partial z}
+		\label{eq:MaterialDerivativeExpanded}
+	\end{equation}
+	Expressing in the notation for CVs (will be explained in Subsection \ref{subsec:ControlVolume},
+	\begin{equation}
+		\frac{df}{dt} = \frac{\partial f}{\partial t}+w_x\frac{\partial f}{\partial x} +w_y\frac{\partial f}{\partial y}+w_z\frac{\partial f}{\partial z}
+		\label{eq:GeneralDerivativeExpanded2}
+	\end{equation}
+	and
+	\begin{equation}
+		\frac{Df}{Dt} = \frac{\partial f}{\partial t}+v_x \frac{\partial f}{\partial x}+v_y \frac{\partial f}{\partial y}+v_z \frac{\partial f}{\partial z}
+		\label{eq:MaterialDerivativeExpanded2}
+	\end{equation}
+	We can also express them in a more compact \highlightbluetext{dot product} form.
+	\begin{equation}
+		\frac{df}{dt} = \frac{\partial f}{\partial t}+\dot{\textbf{x}} \cdot \nabla f
+		\label{eq:GeneralDerivativeDotProduct}
+	\end{equation}
+	cf.
+	\begin{equation}
+		\frac{Df}{Dt} = \frac{\partial f}{\partial t}+\textbf{u} \cdot \nabla f
+		\label{eq:MaterialDerivativeDotProduct}
+	\end{equation}
+	
+	If the path chosen \textbf{x} has the same velocity with the fluid velocity \textbf{u}, ie,
+	\begin{equation*}
+		\dot{\textbf{x}} = \textbf{u}
+	\end{equation*}
+	That is, the observer moves with the same direction and speed with the fluid. Then the general derivative is equal to the material derivative.
+	
+	Still confused in filling the equations with the numbers given in the question? Don't worry, just look at the units!
+	\begin{center}
+		\begin{tabular}{c c}
+			\textbf{Term} & \textbf{Unit} \\
+			\hline
+			$\displaystyle f$ & \emph{<unit>} \\[10pt]
+			$\displaystyle \frac{Df}{Dt}, \frac{\partial f}{\partial t}, \frac{df}{dt}$ & \unit{\emph{<unit>} \per \second} \\[10pt]
+			$\displaystyle \frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}, \frac{\partial f}{\partial z}$ & \unit{\emph{<unit>} \per \metre} \\[10pt]
+			$\displaystyle \frac{dx}{dt}, \frac{dy}{dt}, \frac{dz}{dt}$ & \unit{m/s}
+		\end{tabular}
+	\end{center}
+	
+	\newpage
+
+	\section{Conserved Quantities}
+	\label{sec:ConservedQuantities}
+	
+	\subsection{Mass}
+	\label{subsec:Mass}
+	
+	Mass is a \highlightbluetext{never-changing property} of some body of material. It's a \highlightbluetext{scalar}, and it doesn't change when a force is acting on the body. Note that mass is not directly measured using scales, as scales measure the \emph{force} exerted on the mass by gravity. Therefore, we should divide the scale reading by the gravitational acceleration ($g = 9.81 \unit{m/s}$ on Earth).
+	
+	If we want to use the scale on a place with a different value of gravitational acceleration, we need to recalibrate it. Remember that mass and force are related as follows.
+	\begin{equation*}
+		\vec{F} = m \vec{a}
+	\end{equation*}
+	
+	\subsection{Momentum}
+	\label{subsec:Momentum}
+	
+	Momentum depends on an object's \highlightbluetext{mass} and \highlightbluetext{velocity}. It's a \highlightbluetext{vector}, and it's represented as
+	\begin{equation}
+		\vec{p} = m \vec{v}
+		\label{eq:Momentum}
+	\end{equation}
+	It seems simple, however, questions arise when we select the size of a packet of fluid where its average velocity and time interval is representative. Also, the properties, such as density or chemical constituents, may vary among a fluid. We can treat the average velocity as some \highlightbluetext{weighted average} of the chemical constituents. Note that there's no one-size-fits-all expression for average velocity. Instead, we may consider one expression to be valid if the measured and calculated values are similar and have the same meaning.
+	
+	\subsection{Total Energy}
+	\label{subsec:TotalEnergy}
+	
+	The first law of thermodynamics states that the total energy can only be altered, but not created nor destroyed. In fluid dynamics, the total energy comprises three components: \highlightbluetext{kinetic}, \highlightbluetext{potential}, and \highlightbluetext{internal} energy.
+	
+	\highlightbluetext{Kinetic energy} measures the motions of the molecules. Mathematically, it is expressed as
+	\begin{equation}
+		E_K = \frac{1}{2} mv^2
+		\label{eq:KineticEnergy}
+	\end{equation}
+	It is based on the actual displacement of mass from one position to another.
+	
+	\highlightbluetext{Internal energy}, on the other hand, measures the vibration of molecules.
+	\begin{equation}
+		E_U = mU
+		\label{eq:InternalEnergy}
+	\end{equation}
+	The temperature is a measure of a body's internal energy. The motion of any molecule can be described as the sum of the average velocity and translational velocity.
+	\begin{equation}
+		v_{\text{mol}} = v_{\text{avg}}+v_{\text{trans}}
+		\label{eq:AvgTransVelocity}
+	\end{equation}
+	The two terms are described by the internal energy and kinetic energy respectively.
+	
+	\highlightbluetext{Potential energy} is related to the elevation of an object above some reference height. Note that the magnitude of potential energy varies when different reference height is selected. However, it is not important as only the change in potential energy is considered. It is expressed as
+	\begin{equation}
+		E_P = mgz
+		\label{eq:PotentialEnergy}
+	\end{equation}
+	
+	\highlightbluetext{Total energy} is the quantity that is conserved. If the energy of a fluid decreases, the lost energy must be transferred to another body. If the energy of a fluid increases, there must a source that transferred energy to it. Mathematically, it is described as
+	\begin{equation}
+		\frac{D}{Dt} \left( \frac{1}{2} mv^2+mgz+mU \right) = \delta \dot{W}+\delta \dot{\theta}
+		\label{eq:TotalEnergyConservation}
+	\end{equation}
+	where $\dot{W}$ and $\dot{\theta}$ are the rates of change of \highlightbluetext{work} and \highlightbluetext{heat} respectively.
+	
+	\example{
+		\begin{minipage}[c]{6cm}
+			\scalebox{0.8}{
+				\begin{tikzpicture}
+					\draw[black, ultra thick] (0, 0) rectangle (6, 4);
+					\draw[ultra thick] (0, 2) -- (6, 2);
+					\node at (3, 1) {\large $\rho_2, m_2$};
+					\node at (3, 3) {\large $\rho_1, m_1$};
+					\draw[thick, <->, >= stealth] (6.4, 4) -- (6.4, 2);
+					\draw[thick, <->, >= stealth] (6.4, 2) -- (6.4, 0);
+					\node at (6.8, 3) {\large $h$};
+					\node at (6.8, 1) {\large $h$};
+				\end{tikzpicture}
+			}
+			\begin{equation*}
+				\rho_1 > \rho_2
+			\end{equation*}
+		\end{minipage}
+		\begin{minipage}[c]{\textwidth-6cm}
+			The two gases are separated by a frictionless and massless board. Then the board is removed. Gas 1 becomes the bottom half as its density is larger than that of gas 2. Therefore, their potential energy, but not kinetic energy, will change. $\delta \dot{W}$ and $\delta \dot{\theta}$ are both 0 as there are no external forces or heat acting on the system. If we don't account for the internal energy,
+			\begin{align*}
+				\left( \cancelto{0}{\frac{1}{2} mv^2}+mgz \right)_{\text{i}} &= \left( \cancelto{0}{\frac{1}{2} mv^2}+mgz \right)_{\text{f}} \\
+				m_1 g \frac{3h}{2}+m_2 g \frac{h}{2} &= m_1 g \frac{h}{2}+m_2 g \frac{3h}{2} \\
+				(m_1-m_2)gh &= 0
+			\end{align*}
+			which is false as neither $m_1-m_2$, $g$, nor $h$ equals 0. Therefore, there is some energy lost as internal energy.
+		\end{minipage}
+	}
+	
+	\newpage
+	
+	\section{Conservation Laws}
+	\label{sec:ConservationLaws}
+	
+	\subsection{Control Volume}
+	\label{subsec:ControlVolume}
+	
+	Before we do any analysis we must clearly identify the region, which is referred as $\Omega$. The boundary of the region is $\Gamma$. We also call the region a \highlightbluetext{free body} and the diagram representing it \highlightbluetext{free body diagram}.
+	
+	The \highlightbluetext{control volume} (CV) is the region we want to study and the \highlightbluetext{control surface} (CS) is the area which the CV interacts with the surroundings. We can choose the CV to be whatever we like. Here are some rules for choosing the CV smart:
+	\begin{enumerate}
+		\item We can choose the \highlightbluetext{shape}, \highlightbluetext{size} and \highlightbluetext{speed} of the CV.
+		\item The CV must be large enough that the continuum hypothesis is valid.
+		\item The CV should include flows we want to study.
+	\end{enumerate}
+	We then define the velocity of the CS and the fluid to be $\vec{w}$ and $\vec{v}$ respectively. In Cartesian coordinates, $\vec{w} = w_x \hat{\imath}+w_y \hat{\jmath}+w_z \hat{k}$ and $\vec{v} = v_x \hat{\imath}+v_y \hat{\jmath}+v_z \hat{k}$. CVs are classified into three types according to its $\vec{w}$ and $\vec{v}$.
+	\begin{itemize}
+		\item \highlightbluetext{General Control Volume}: The CS moves with arbitrary speed $\vec{w}$.
+		\item \highlightbluetext{Material Control Volume}: $\vec{w} = \vec{v}$ for all points on the boundary.
+		\item \highlightbluetext{Fixed Control Volume}: $\vec{w} = \vec{0}$.
+	\end{itemize}
+	
+	\subsection{General Balance Equation}
+	\label{subsec:GeneralBalanceEquation}
+	
+	To write a \highlightbluetext{general balance equation} for a property in a general control volume, we account for all possible ways a property of a CV can change with time. Mathematically, we write
+	\begin{equation}
+		\frac{d\Psi}{dt} = \dot{\Psi}_{\text{in}}-\dot{\Psi}_{\text{out}}+\dot{S}_\Psi+\dot{G}_\Psi
+		\label{eq:GeneralBalanceEquation}
+	\end{equation}
+	where $\frac{d\Psi}{dt}$ is the \highlightbluetext{rate of change} of the property measured by an observer moving with speed $\vec{w}$, $\dot{\Psi}_{\text{in}}$ is the \highlightbluetext{rate of influx} of the property in the CV, $\dot{\Psi}_{\text{out}}$ is the \highlightbluetext{rate of outflux} of the property, $\dot{S}_\Psi$ is the \highlightbluetext{rate of supply} of the property to the CV other than flow, and $\dot{G}_\Psi$ is the \highlightbluetext{rate of generation} of the property in the CV.
+
+	Let's rewrite the first term about the rate of change of $\Psi$. Now we define $\psi$ as $\Psi$ per unit volume. However, it is incorrect to write $\Psi = \psi \vol$ as $\psi$ may vary within the CV. We can instead express the term $\frac{d\Psi}{dt}$ as an integral.
+	\begin{equation}
+		\frac{d\Psi}{dt} = \frac{d}{dt} \int_\Omega \psi \, d\vol
+		\label{eq:RateOfChangeOfPsiIntegral}
+	\end{equation}
+	Now let's consider the second and third term about \highlightbluetext{inflow and outflow}. We first define $\dot{\Psi}_{\text{net}} = \dot{\Psi}_{\text{out}}-\dot{\Psi}_{\text{in}}$ as the net rate of $\Psi$ leaving the CV through the CS, $\Gamma$. The only component of $\vec{v}$ that contributes to the flow leaving the boundary is \highlightbluetext{normal} to the boundary. If we denote the normal vector as $\vec{n}$, then such component is $\vec{v} \cdot \vec{n}$. However, this is only valid for boundaries that are not moving. If the boundary is moving at speed $\vec{w}$, then we should dot the normal vector with the velocity of flow \highlightbluetext{relative to the boundary}, ie, $(\vec{v}-\vec{w}) \cdot \vec{n}$.
+	
+	Integrating this term over the whole boundary,
+	\begin{equation}
+		\dot{\Psi}_{\text{net}} = \int_\Gamma \psi (\vec{v}-\vec{w}) \cdot \vec{n} \, dA
+		\label{eq:NetFluxIntegral}
+	\end{equation}
+	\remarks{Imagine water leaving a bottle. If we take the CV as the bottle, then the only CS with mass flux is the opening. We have to consider the flow of all fluids, in this case both water and air. We do usually neglect the air flow, intentionally, due to the much smaller density of air compared to that of water.}
+	
+	For the fourth term about \highlightbluetext{external supply}, it can be broken down into one part that acts on the \highlightbluetext{surface} of the CV, and another that acts on the \highlightbluetext{body}. Denote $\vec{f}_\psi$ and $b_\psi$ as the supply to the surface and the body respectively. Similar to the flux terms,
+	\begin{equation}
+		\dot{S}_\psi = \int_\Gamma \vec{f}_\psi \cdot \vec{n} \, dA+\int_\Omega b_\psi \, d\vol
+		\label{eq:SupplyIntegral}
+	\end{equation}
+	
+	The fifth term is about \highlightbluetext{generation} inside the CV. Denote $\dot{\gamma}_\psi$ as the generation of $\psi$.
+	\begin{equation}
+		\dot{G}_\psi = \int_\Omega \dot{\gamma}_\psi \, d\vol
+		\label{eq:GenerationIntegral}
+	\end{equation}
+	
+	Let's combine all these integral.
+	\begin{equation}
+		\frac{d}{dt} \int_\Omega \psi \, d\vol+\int_\Gamma (\vec{v}-\vec{w}) \cdot \vec{n} \, dA = \int_\Gamma \vec{f}_\psi \cdot \vec{n} \, dA+\int_\Omega b_\psi \, d\vol+\int_\Omega \dot{\gamma}_\psi \, d\vol
+		\label{eq:GeneralBalanceEquationIntegral}
+	\end{equation}
+	This is known as the \highlightbluetext{general balance equation}.
+	
+	\subsection{Mass Conservation}
+	\label{subsec:MassConservation}
+	
+	The law of \highlightbluetext{mass conservation} states that the mass of a control volume cannot be created nor destroyed. Therefore, the \highlightbluetext{supply} term $\dot{S}_M = 0$ and the \highlightbluetext{generation} term $\dot{G}_M = 0$.
+	
+	The general balance equation becomes
+	\begin{equation}
+		\frac{d}{dt} \int_\Omega \rho \, d\vol+\int_\Gamma \rho (\vec{v}-\vec{w}) \cdot \vec{n} \, dA = 0
+		\label{eq:MassConservationIntegral}
+	\end{equation}
+	If we consider a \highlightbluetext{fixed control volume} and \highlightbluetext{constant density}, the mass conservation equation becomes
+	\begin{equation}
+		\frac{d}{dt} \int_\Omega 1 \, d\vol+\int_{\Gamma, \text{in}} \vec{v} \cdot \vec{n} \, dA-+\int_{\Gamma, \text{out}} \vec{v} \cdot \vec{n} \, dA = 0
+		\label{eq:ReservoirEquationIntegral}
+	\end{equation}
+	We define
+	\begin{equation}
+		Q = \int \underbrace{(\vec{v}-\vec{w})}_{[LT^{-1}]} \cdot \underbrace{\vec{n}}_{[1]} \, \underbrace{dA}_{[L^2]} = \underbrace{\text{Flow rate}}_{[L^3T^{-1}]}
+	\end{equation}
+	Equation \ref{eq:ReservoirEquationIntegral} then becomes
+	\begin{equation}
+		\frac{d}{dt} \vol = Q_{\text{in}}-Q_{\text{out}}
+	\end{equation}
+	which is known as the \highlightbluetext{reservoir equation}. Reservoirs will be discussed more in Subsection \ref{subsec:Reservoir}.
+	
+	\subsection{Momentum Conservation}
+	\label{subsec:MomentumConservation}
+	
+	Denoted by $P$, the \highlightbluetext{linear momentum} is the mass of an object multiplied by the velocity vector of the centre of gravity. The \highlightbluetext{supply} term $\dot{S}_P = \sum \vec{F}_{\text{ext}}$ and the \highlightbluetext{generation} term $\dot{G}_P = 0$.
+	
+	The general balance equation becomes
+	\begin{equation}
+		\frac{d}{dt} \int_\Omega \rho \vec{v} \, d\vol+\int_\Gamma \rho \vec{v} (\vec{v}-\vec{w}) \cdot \vec{n} \, dA = \sum \vec{F}_{\text{ext}}
+		\label{eq:MomentumConservationIntegral}
+	\end{equation}
+	If we consider a \highlightbluetext{material control volume}, there will be no fluxes in the boundary. The momentum conservation equation becomes
+	\begin{equation}
+		\frac{D}{Dt} \int_\Omega \rho \vec{v} \, d\vol = \sum \vec{F}_{\text{ext}}
+		\label{eq:MCVMomentumConservationIntegral}
+	\end{equation}
+	
+	\subsection{Energy Conservation}
+	\label{subsec:EnergyConservation}
+	
+	We first define the energy per unit volume $e$. The law of \highlightbluetext{energy conservation} (first law of thermodynamics) states that the \highlightbluetext{supply} term $\dot{S}_E = \dot{W}+\dot{\Theta}$ and the \highlightbluetext{generation} term $\dot{G}_E = 0$, where $\dot{W}$ is the rate of \highlightbluetext{work done} and $\dot{\Theta}$ is the rate of \highlightbluetext{heat flow} on the object.
+	
+	The general balance equation becomes
+	\begin{equation}
+		\frac{d}{dt} \int_\Omega e \, d\vol+\int_\Gamma e(\vec{v}-\vec{w}) \cdot \vec{n} \, dA = \dot{W}+\dot{\Theta}
+		\label{eq:EnergyConservationIntegral}
+	\end{equation}
+	Again, if we consider a \highlightbluetext{material control volume}, the energy conservation equation becomes
+	\begin{equation}
+		\frac{D}{Dt} \int_\Omega e \, d\vol = \dot{W}+\dot{\Theta}
+		\label{eq:MCVEnergyConservationIntegral}
+	\end{equation}
+	
+	\subsection{Steady State}
+	\label{subsec:SteadyState}
+	
+	Steady state refers to a flow that all properties of a fluid, such as density, pressure, temperature, and velocity, \highlightbluetext{remain constant} at any point over time. Mathematically, it can be expressed using partial derivatives (because the location is fixed).
+	\begin{equation}
+		\frac{\partial \rho}{\partial t} = \frac{\partial p}{\partial t} = \frac{\partial T}{\partial t} = \frac{\partial \vec{v}}{\partial t} = 0
+		\label{SteadyStatePartialDerivatives}
+	\end{equation}
+	
+	\subsection{Constant Density?}
+	\label{ConstantDensity}
+	
+	We sometimes assume the density remains constant. But in which case is the assumption valid?
+	\begin{enumerate}
+		\item The pressure is low.
+		\item Mach number $\ll$ 1.
+		\item $t \gg \frac{L}{c}$ for reservoirs, where $t$ is the duration of gate closing, $L$ is the length of reservoir and $c$ is the wave travelling speed.
+	\end{enumerate}
+	
+	\newpage
+	
+	\section{Water Bodies}
+	\label{sec:WaterBodies}
+	
+	\subsection{Reservoir}
+	\label{subsec:Reservoir}
+	
+	Let's look at some examples. Consider the following reservoir.
+	
+	\derivation{
+		\begin{minipage}[c]{5.5cm}
+			\scalebox{0.8}{
+				\begin{tikzpicture}
+					\draw[ultra thick] (0, 0) -- (6, 0);
+					\draw[ultra thick] (4, 0) -- (4, 3);
+					\draw[ultra thick] plot [smooth] coordinates {(4, 3) (4.65, 2.45) (4.9, 0)};
+					\draw[thick] (0, 2.25) -- (4, 2.25);
+					\draw[thick, dashed] (0, 3) -- (4, 3);
+					\draw[thick, dashed] (0, 3.75) -- (4, 3.75);
+					\draw[thick, ->, >= stealth] (1, 2.25) -- (1, 3);
+					\draw[thick, ->, >= stealth] (1, 3) -- (1, 3.75);
+					\node at (1.4, 2.625) {$H_0$};
+					\node at (1.4, 3.375) {$H$};
+					\draw[-implies, double equal sign distance] (0.15, 0.5) -- (0.9, 0.5);
+					\node at (1.35, 0.5) {$Q_{\text{in}}$};
+					\draw[-implies, double equal sign distance] (4.15, 3.375) -- (4.9, 3.375);
+					\node at (5.35, 3.375) {$Q_{\text{out}}$};
+					\fill [fill = {rgb, 255:red, 137; green, 207; blue, 240}, nearly transparent] (0, 0) rectangle (4, 2.25);
+				\end{tikzpicture}
+			}
+		\end{minipage}
+		\begin{minipage}[c]{\textwidth-5.5cm}
+			What is the time needed for reaching the \highlightbluetext{maximum capacity} of the reservoir? We consider the range of time $t$ where $H < 0$. The outflow rate of the reservoir $Q_{\text{out}} = 0$.
+			\begin{align*}
+				\frac{d\vol}{dt} &= Q_{\text{in}}-Q_{\text{out}} \\
+				&= Q_{\text{in}} \\
+				\vol(t)-\vol(0) &= Q_{\text{in}} (t_1-0) \\
+				A\underbrace{(H(t)-H(0))}_{H_0} &= Q_{\text{in}}t_1 \\
+				t_1 &= \frac{AH_0}{Q_{\text{in}}}
+			\end{align*}
+			Now let's consider the case where $H > 0$. The inflow rate is still $Q_{\text{in}}$, but the outflow rate becomes $Q_{\text{out}} = C_d LH$, where $C_d$ is the \highlightbluetext{coefficient of discharge} (due to the friction of water over the surface of dam), and $L$ is the width of the dam into the paper.
+			\begin{align*}
+				\frac{dAH}{dt} &= Q_{\text{in}}-Q_{\text{out}} \\
+				A \frac{dH}{dt} &= Q_{\text{in}}-C_d LH
+			\end{align*}
+			This is a first order differential equation which can be solved by an integrating factor $\mu(x) = e^{\int \frac{C_d L}{A} \, dt}$.
+			\begin{equation*}
+				H(t) = \frac{Q_{\text{in}}}{C_d L} \left( 1-e^{-\frac{C_d}{A} (t-t_1)} \right)
+			\end{equation*}
+			As $t \to \infty$, $H(t) \to \frac{Q_{\text{in}}}{C_d L} = H_{\text{max}}$.
+		\end{minipage}
+	}
+	
+	\newpage
+	
+	\question{Suppose there is climate change. How will it affect the reservoir above?}
+	
+	\answer{The inflow rate $Q_{\text{in}}$ increases due to increased precipitation and enhanced water cycle. $t_1$ decreases while $H_{\text{max}}$ increases. As a result, we have less time to escape before the dam fails, and the maximum water height, and thus the outflow rate, increases. And this is why we should use less energy and slow down climate change!}
+	
+	\subsection{Tsunami}
+	\label{subsec:Tsunami}
+	
+	Tsunami is a series of waves in a water body that causes catastrophic destructions. Why is it so powerful even if the wave height is small? Let's consider the force by the tsunami.
+	\begin{equation*}
+		\sum F_{\text{ext}} = \frac{d}{dt} (m \vec{v}) = m \frac{d \vec{v}}{dt}
+	\end{equation*}
+	The mass of the water body, $m$, is very large as we are considering kilometres of water. The acceleration, $\frac{d \vec{v}}{dt}$, is also very large as the waves stop within a short period of time after hitting an object. Therefore, their product, $\sum F_{\text{ext}}$, is, of course, very large.
+	
+	Now let's derive the equation for the velocity of tsunami waves.
+	
+	\derivation{
+		\begin{minipage}[c]{5.5cm}
+			\scalebox{0.8}{
+				\begin{tikzpicture}
+					\draw[ultra thick] (0, 0) -- (6, 0);
+					\draw[thick, dashed] (1, 0) -- (1, 1.25);
+					\draw[thick] (1, 1.25) -- (3, 1.25);
+					\draw[thick] (3, 1.25) -- (3, 2);
+					\draw[thick] (3, 2) -- (5, 2);
+					\draw[thick, dashed] (5, 2) -- (5, 0);
+					\draw[thick, ->, >= stealth] (3, 1.625) -- (2.2, 1.625);
+					\node at (2.6, 1.8) {$c$};
+					\draw[thick, <->, >= stealth] (1, 2.5) -- (3, 2.5);
+					\draw[thick, <->, >= stealth] (3, 2.5) -- (5, 2.5);
+					\node at (2, 2.75) {$L-ct$};
+					\node at (4, 2.75) {$ct$};
+					\draw[thick, <->, >= stealth] (1, -1) -- (5, -1);
+					\node at (3, -1.25) {$L$};
+					\draw[-implies, double equal sign distance] (0.7, 0.625) -- (1.3, 0.625);
+					\draw[-implies, double equal sign distance] (4.7, 0.625) -- (5.3, 0.625);
+					\draw[semithick, <->, >= stealth] (1.6, 1.25) -- (1.6, 0);
+					\node at (1.85, 0.625) {\footnotesize $y_1$};
+					\draw[semithick, <->, >= stealth] (3.4, 2) -- (3.4, 0);
+					\node at (3.65, 1) {\footnotesize $y_2$};
+					\draw[thick, ->, >= stealth] (2.2, 0.625) -- (2.8, 0.625);
+					\node at (2.5, 0.86) {\footnotesize $v_1$};
+					\draw[thick, ->, >= stealth] (4, 0.625) -- (4.6, 0.625);
+					\node at (4.3, 0.86) {\footnotesize $v_2$};
+					\node at (1, 1.5) {\footnotesize $p = 0$};
+					\node at (1, -0.25) {\footnotesize $p = \rho gy_1$};
+					\node at (5, 2.25) {\footnotesize $p = 0$};
+					\node at (5, -0.25) {\footnotesize $p = \rho gy_2$};
+					\fill [fill = {rgb, 255:red, 137; green, 207; blue, 240}, nearly transparent] (1, 0) rectangle (3, 1.25);
+					\fill [fill = {rgb, 255:red, 137; green, 207; blue, 240}, nearly transparent] (3, 0) rectangle (5, 2);
+				\end{tikzpicture}
+			}
+		\end{minipage}
+		\begin{minipage}[c]{\textwidth-5.5cm}
+			We take a control volume where all sides except the wave are stationary ($\vec{w} = 0$). The control volume surface along the moving bore will move with the bore (the bore is a step-shaped water surface in a tsunami).
+			Take the width to be 1 unit into the paper. We first consider \highlightbluetext{mass conservation}.
+			\begin{align*}
+				\frac{dm}{dt} &= \dot{m}_{\text{in}}-\dot{m}_{\text{out}} \\
+				\frac{d}{dt} \left( y_1(L-ct)+\rho y_2ct \right) &= \rho y_1v_1-\rho y_2v_2 \\
+				y_1(v_1+c) &= y_2(v_2+c)
+			\end{align*}
+			We define $q =	y_1(v_1+c) = y_2(v_2+c)$ as the flow rate per unit width.
+		\end{minipage}
+	}
+	
+	\derivation{
+		Now let's consider \highlightbluetext{momentum conservation}.
+		\begin{align*}
+			\frac{dp}{dt} &= \dot{p}_{\text{in}}-\dot{p}_{\text{out}}+\sum F_{\text{ext}} \\
+			\frac{d}{dt} \left( y_1(L-ct)v_1+\rho y_2ctv_2 \right) &= \dot{m}_{\text{in}}v_1-\dot{m}_{\text{out}}v_2+\sum F_{\text{ext}} \\
+			&= \rho v_1y_1v_1-\rho v_2y_2v_2+\sum F_{\text{ext}} \\
+			\sum F_{\text{ext}} &= -\rho y_1v_1(v_1+c)+\rho y_2v_2(v_2+c) \\
+			&= \rho q(v_2-v_1) \\
+			\bar{p}_1y_1-\bar{p}_2y_2 &= \rho q(v_2-v_1) \\
+			\frac{1}{2} \rho gy_1^2-\frac{1}{2} \rho gy_2^2 &= \rho \overbrace{y_1(v_1+c)}^q (v_2-v_1)
+		\end{align*}
+		Substituting $v_2 = \frac{y_1}{y_2} (v_1+c)-c$ and isolating $v_1+c$, we get
+		\begin{equation}
+			v_1+c = \pm \sqrt{g\frac{y_1+y_2}{2} \frac{y_2}{y_1}}
+			\label{eq:HydraulicBoreVelocity}
+		\end{equation}
+	}
+	
+	The flow rate $Q$ can also easily be calculated using $Q = Av$.
+	
+	There're two special cases. What happens if $c = 0$? The bore will not move, and it's called a \highlightbluetext{hydraulic jump}.
+	
+	What happens if $y_1 \to y_2 \to y$? The velocity becomes
+	\begin{equation}
+		v_1+c = \sqrt{gy}
+		\label{eq:HydraulicJumpSameWaterDepth}
+	\end{equation}
+	This is easily observable in daily life! If we drop a stone inside a pool of water, \highlightbluetext{ripples} are generated. The dispersion of ripples has the speed $\sqrt{gy}$, where $y$ is the water depth.
+	
+	\newpage
+	
+	\example{
+		Imagine there is a reservoir with a gate. The gate is slightly open, and the inflow and outflow rates are $40 \unit{m\cubed/s}$ and $0.5 \unit{m\cubed/s}$ respectively. The initial water depth $y_1$ is $1.58 \unit{\metre}$. The width is $10 \unit{\metre}$ into the paper.
+		
+		We first calculate the water bore speed $c$.
+		\begin{align*}
+			c &= \frac{v_1y_1-v_2y_2}{y_2-y_1} \\
+			&= \frac{\frac{Q_1}{B}-\frac{Q_2}{B}}{y_2-y_1} \\
+			&= \frac{\frac{40}{10}-\frac{0.5}{10}}{y_2-1.58} \\
+		\end{align*}
+		Using Equation \ref{eq:HydraulicBoreVelocity},
+		\begin{align*}
+			2.53+c = \sqrt{9.81 \frac{1.58+y_2}{2} \frac{y_2}{1.58}} \\
+			2.53+\frac{\frac{40}{10}-\frac{0.5}{10}}{y_2-1.58} = \sqrt{9.81 \frac{1.58+y_2}{2} \frac{y_2}{1.58}} \\
+		\end{align*}
+		Solving the equation gives
+		\begin{align*}
+			y_2 &= 2.714 \unit{\metre} \\
+			c &= 3.483 \unit{m/s}
+		\end{align*}
+	}
+	
+	Equation \ref{eq:HydraulicBoreVelocity} can explain many phenomena!
+	Consider a water wave. The top part of the wave has a larger height than the bottom part. By Equation \ref{eq:HydraulicBoreVelocity}, it will travel faster than the bottom part, so the wave turns into a \highlightbluetext{spiral shape}.
+	
+	When water waves that are not parallel go towards the shoreline, the part of wave that are closer to the shoreline travels slower due to the shallower water depth. As a result, wavefronts \highlightbluetext{"rotate"} and gradually become parallel to the shoreline. This is known as \highlightbluetext{refraction}.
+	
+	Consider an \highlightbluetext{artificial island} is created in the middle of the sea. Waves travelling towards it will have their two ends bent, forming a U shaped wavefront. The two ends will ultimately meet behind the island, while \highlightbluetext{rocks and aggregates} settle down to the seabed. The sediments will form a narrow piece of land connecting the island to the shoreline, which is known as a \highlightbluetext{tombolo}.
+	
+	\newpage
+		
+	We now consider \highlightbluetext{energy conservation}. Denote the energy per unit mass as $e'$.
+	
+	\derivation{
+		\begin{align*}
+			\frac{dE}{dt} &= \dot{E}_{\text{in}}-\dot{E}_{\text{out}}+\dot{W}+\dot{\Theta} \\
+			\frac{d}{dt} (m_1e_1'+m_2e_2') &= \dot{m}_{\text{in}}e_1'-\dot{m}_{\text{out}}e_2'+\dot{W}+0 \\
+			\frac{d}{dt} \left( \rho y_1(L-ct)e_1'+\rho y_2(ct)e_2' \right) &= \rho v_1y_1e_1'-\rho y_2v_2e_2'+\frac{(\rho gy_1)y_1v_1}{2}-\frac{(\rho gy_2)y_2v_2}{2} \\
+			cy_1(e_2'-e_1') &= v_1y_1e_1'-v_2y_2e_2'+\frac{gy_1^2}{2}-\frac{gy_2^2}{2} \\
+			\frac{gy_1^2}{2}-\frac{gy_2^2}{2} &= y_1(v_1+c)(e_2'-e_1') \\
+			&= y_1(v_1+c) \left( \left( gz_2+\frac{v_2^2}{2}+U_2 \right) - \left( gz_1+\frac{v_1^2}{2}+U_1 \right) \right)
+		\end{align*}
+		Isolating the difference in \highlightbluetext{internal energy} $U_2-U_1$, we get
+		\begin{equation}
+			U_2-U_1 = g\frac{(y_2-y_1)^3}{4y_1y_2}
+			\label{eq:HydraulicBoreInternalEnergy}
+		\end{equation}
+	}
+	
+	\remarks{
+		In the above calculation, it is important that the friction between the water and seabed is \highlightbluetext{not negligible}. Instead, it is exactly equal to 0 as the velocity of water just above the seabed is 0 due to \highlightbluetext{no slip condition}.
+	}
+	
+	\newpage
+	
+	\section{Fluid Statics}
+	\label{sec:FluidStatics}
+	
+	\subsection{Hydrostatic Pressure}
+	\label{subsec:HydrostaticPressure}
+	
+	A body is in \highlightbluetext{statics} when its velocity $\vec{v} = 0$ in all surfaces. Consider the \highlightbluetext{momentum conservation} equation.
+	\begin{align*}
+		\frac{d}{dt} \int_\Omega \rho \vec{v} \, d\vol+\int_\Gamma \rho \vec{v} (\vec{v}-\vec{w}) \cdot \vec{n} \, dA &= \sum \vec{F}_{\text{ext}} \\
+		\frac{d}{dt} \int_\Omega \rho \cancelto{0}{\vec{v}} \, d\vol+\int_\Gamma \rho \cancelto{0}{\vec{v}} (\vec{v}-\vec{w}) \cdot \vec{n} \, dA &= \sum \vec{F}_{\text{ext}} \\
+		\sum \vec{F}_{\text{ext}} &= 0
+	\end{align*}
+	The sum of forces in the $x$, $y$, and $z$ directions is 0.
+	\derivation{
+		\begin{minipage}[c]{6cm}
+			\scalebox{0.75}{
+				\begin{tikzpicture}
+					\begin{axis}[axis lines = middle, y dir = reverse, only marks,
+						xmin = 0, xmax = 7, ymin = 0, ymax = 10, zmin = 0, zmax = 4,
+						xmajorticks = false, ymajorticks = false, zmajorticks = false,
+						xlabel = {$y$}, ylabel = {$x$}, zlabel = {$z$},
+						every axis y label/.append style = {at = (ticklabel* cs:0)},
+						every axis z label/.append style = {at = (ticklabel* cs:1)}
+						]
+						\draw[thick] (axis cs:0, 6, 0) -- (axis cs:0, 6, 2);
+						\draw[thick] (axis cs:0, 6, 2) -- (axis cs:0, 0, 2);
+						\draw[thick] (axis cs:0, 0, 2) -- (axis cs:5, 0, 0);
+						\draw[thick] (axis cs:5, 0, 0) -- (axis cs:5, 6, 0);
+						\draw[thick] (axis cs:5, 6, 0) -- (axis cs:0, 6, 0);
+						\draw[thick] (axis cs:5, 6, 0) -- (axis cs:0, 6, 2);
+						\draw[thick, ->, >=stealth] (axis cs:1.8, -5, 0.7) -- (axis cs:1.8, 0, 0.7);
+						\draw[thick, ->, >=stealth] (axis cs:2.5, 3, -1.3) -- (axis cs:2.5, 3, 0);
+						\draw[thick, ->, >=stealth] (axis cs:-1.6, 3, 1) -- (axis cs:0, 3, 1);
+						\node at (axis cs:1.8, -6.3, 0.7) {$\bar{p}_x$};
+						\node at (axis cs:-2, 3, 1) {$\bar{p}_y$};
+						\node at (axis cs:2.5, 3, -1.6) {$\bar{p}_z$};
+					\end{axis}
+				\end{tikzpicture}
+			}
+		\end{minipage}
+		\begin{minipage}[c]{\textwidth-6cm}
+			We consider a triangular prism underwater, subjected to water pressure in all directions. Let the length, width, and height be $\Delta x$, $\Delta y$, and $\Delta z$, respectively. $\Delta s = \sqrt{(\Delta x)^2+(\Delta y)^2}$ is the length of the slanted edge. Denote the angle between the inclined plane and the horizontal as $\theta$.
+			\begin{align*}
+				\sum \vec{F}_y = \bar{p}_y \Delta z \Delta x-\bar{p}_x \Delta s \Delta x \sin \theta &= 0 \\
+				(\bar{p}_y-\bar{p}_s) \Delta z \Delta x &= 0 \\
+				\bar{p}_y &= \bar{p}_s
+			\end{align*}
+			and
+			\begin{align*}
+				\sum \vec{F}_z = \bar{p}_z \Delta y \Delta x-\bar{p}_s \Delta s \Delta x \cos \theta-\rho \frac{\Delta x \Delta y \Delta z}{2} &= 0 \\
+				\bar{p}_z-\bar{p}_s-\rho \frac{\Delta z}{2} g &= 0
+			\end{align*}
+			We take $\Delta z \to 0$.
+			\begin{equation*}
+				\bar{p}_z = \bar{p}_s = \bar{p}_y = \bar{p}_x
+			\end{equation*}
+			The fluid pressure is equal in \highlightbluetext{all directions}!
+		\end{minipage}
+	}
+	
+	\newpage
+	
+	Now let's consider a rectangular box under water.
+	\derivation{
+		\begin{minipage}[c]{6cm}
+			\scalebox{0.75}{
+				\begin{tikzpicture}
+					\begin{axis}[axis lines = middle, y dir = reverse, only marks,
+						xmin = 0, xmax = 7, ymin = 0, ymax = 10, zmin = 0, zmax = 4,
+						xmajorticks = false, ymajorticks = false, zmajorticks = false,
+						xlabel = {$y$}, ylabel = {$x$}, zlabel = {$z$},
+						every axis y label/.append style = {at = (ticklabel* cs:0)},
+						every axis z label/.append style = {at = (ticklabel* cs:1)}
+						]
+						\draw[thick] (axis cs:0, 6, 0) -- (axis cs:0, 6, 2);
+						\draw[thick] (axis cs:0, 6, 2) -- (axis cs:0, 0, 2);
+						\draw[thick] (axis cs:0, 6, 2) -- (axis cs:5, 6, 2);
+						\draw[thick] (axis cs:0, 0, 2) -- (axis cs:5, 0, 2);
+						\draw[thick] (axis cs:5, 0, 2) -- (axis cs:5, 6, 2);
+						\draw[thick] (axis cs:5, 6, 2) -- (axis cs:5, 6, 0);
+						\draw[thick] (axis cs:5, 0, 2) -- (axis cs:5, 0, 0);
+						\draw[thick] (axis cs:5, 0, 0) -- (axis cs:5, 6, 0);
+						\draw[thick] (axis cs:5, 6, 0) -- (axis cs:0, 6, 0);
+					\end{axis}
+				\end{tikzpicture}
+			}
+		\end{minipage}
+		\begin{minipage}[c]{\textwidth-6cm}
+			Again, let the length, width, and height be $\Delta x$, $\Delta y$, and $\Delta z$, respectively.
+			\begin{align*}
+				\sum \vec{F}_y = \bar{p}_y \Delta z \Delta x-\bar{p}_{y+\Delta y} \Delta z \Delta x &= 0 \\
+				\bar{p}_y &= \bar{p}_{y+\Delta y} \\
+				\frac{\bar{p}_y-\bar{p}_{y+\Delta y}}{\Delta y} &= 0
+			\end{align*}
+			Similarly, for the $x$ direction,
+			\begin{equation*}
+				\frac{\bar{p}_x-\bar{p}_{x+\Delta x}}{\Delta x} = 0
+			\end{equation*}
+			However, for the $z$ direction, we have to account for the \highlightbluetext{gravitational force}.
+			\begin{equation*}
+				\frac{\bar{p}_z-\bar{p}_{z+\Delta z}}{\Delta z}-\rho g = 0
+			\end{equation*}
+			We take $(\Delta x, \Delta y, \Delta z) \to (0, 0, 0)$. The above fractions can be rewritten as partial derivatives.
+			\begin{equation*}
+				\begin{cases}
+					\frac{\partial p}{\partial x} &= 0 \\
+					\frac{\partial p}{\partial y} &= 0 \\
+					\frac{\partial p}{\partial z} &= -\rho g
+				\end{cases}
+			\end{equation*}
+			Or in a compact form,
+			\begin{equation*}
+				\nabla p = \langle 0, 0, -\rho g \rangle
+			\end{equation*}
+		\end{minipage}
+	}
+	
+	\newpage
+	
+	\subsection{Hydrostatic Force on Inclined Surface}
+	\label{subsec:HydrostaticForceOnInclinedSurface}
+	
+	Consider an \highlightbluetext{inclined board} underwater that makes an angle $\theta$ with the horizontal.
+	
+	\derivation{
+		\begin{minipage}[c]{6cm}
+			\scalebox{0.8}{
+				\begin{tikzpicture}
+					\draw[ultra thick] (0, 0) -- (6, 0);
+					\draw[thick] (0, 5) -- (6, 5);
+					\draw[thick] (1, 1) -- (3, 3) -- (3.2, 2.8) -- (1.2, 0.8) -- cycle;
+					\draw[thick, <->, >=stealth] (1.7, 1.7) -- (1.7, 5);
+					\node at (1.5, 3.35) {\footnotesize $h$};
+					\draw[thick, <->, >=stealth] (2, 1.2) -- (5.7, 5);
+					\node at (3.9, 2.65) {\footnotesize $H$};
+					\draw[thick, ->, >=stealth] (0.9, 2.5) -- (1.7, 1.7);
+					\node at (0.75, 2.65) {\footnotesize $p$};
+					\fill[blue] (5.7, 5) circle (0.075);
+					\node at (5.7, 5.3) {\footnotesize $O$};
+					\fill [fill = {rgb, 255:red, 137; green, 207; blue, 240}, nearly transparent] (0, 0) rectangle (6, 5);
+					\fill [fill = {rgb, 255:red, 175; green, 110; blue, 77}, nearly transparent] (1, 1) -- (3, 3) -- (3.2, 2.8) -- (1.2, 0.8) -- cycle;
+				\end{tikzpicture}
+			}
+		\end{minipage}
+		\begin{minipage}[c]{\textwidth-6cm}
+			By trigonometry, $H \sin \theta = h$. Consider an elementary area on which the pressure $p$ acts.
+			\begin{align*}
+				dF = p \, dA &= \rho gh \, dA \\
+				F &= \int_A \rho gh \, dA \\
+				  &= \rho g \int_A H \sin \theta \, dA \\
+				  &= \rho g \sin \theta \int_A H \, dA \\
+				  &= \rho g \sin \theta H_c A
+			\end{align*}
+			where $H_c$ is the centroidal distance. Let's consider the moment with $O$ as the pivot.
+			\begin{align*}
+				dM &= H \, dF \\
+				   &= H \rho gh \, dA \\
+				   &= \rho g \sin \theta H^2 \, dA \\
+				M &= \rho g \sin \theta \int_A H^2 \, dA \\
+				  &= \rho g \sin \theta I_x \\
+				  &= \rho g \sin \theta (\bar{I_x}+AH_c^2)
+			\end{align*}
+			where $I_x$ and $\bar{I_x}$ are the moment of inertia of the inclined board about the $x$ axis (pointing out of the paper), about $O$ and the centroidal axis, respectively. As $M = FH_{cp} = \rho g \sin \theta H_c A$,
+			\begin{equation}
+				H_{cp} = \frac{\rho g \sin \theta(\bar{I_x}+AH_c^2)}{\rho g \sin \theta A} = H_c+\frac{\bar{I_x}}{H_c A}
+				\label{eq:DistanceToCentreOfPressure}
+			\end{equation}
+			where $H_{cp}$ is the distance to centre of pressure.
+		\end{minipage}
+	}
+	
+	The above equation shows that the \highlightbluetext{centre of pressure} $H_{cp}$ is a bit below $H_c$, the \highlightbluetext{centroid}. Note that both $H_{cp}$ and $H_c$ are measured from the \highlightbluetext{fluid surface}.
+	
+	\subsection{Buoyancy}
+	\label{subsec:Buoyancy}
+	
+	\highlightbluetext{Buoyancy} is a force exerted by the fluid on an immersed object that \highlightbluetext{opposes the downwards gravitational force}. Consider a partially immersed object in a fluid. The bottom face of the object is $h$ below the fluid surface.
+	\begin{align*}
+		\sum F_z &= -W+PA \\
+		&= -W+\rho ghA \\
+		&= -W+\rho g \vol_{\text{displaced}}
+	\end{align*}
+	If the object is stationary,
+	\begin{equation}
+		F_B = \rho g \vol_{\text{displaced}} = W
+		\label{eq:BuoyancyForce}
+	\end{equation}
+	
+	\newpage
+	
+	\section{Mean Value Theorem}
+	\label{sec:MeanValueTheorem}
+	
+	\subsection{Boussinesq Coefficients}
+	\label{subsec:BoussinesqCoefficients}
+	
+	The \highlightbluetext{mean value theorem} states that for an integral $\int f \, dx$ there exists a \emph{mean value} $\bar{f}$ such that
+	\begin{equation}
+		\int_a^b f \, dx = (b-a) \bar{f}
+		\label{eq:MeanValueTheorem1D}
+	\end{equation}
+	and for double integrals,
+	\begin{equation}
+		\iint_A f \, dA = \bar{f} A
+		\label{eq:MeanValueTheorem2D}
+	\end{equation}
+	\begin{equation}
+		\iint_A fg \, dA = \bar{f} \bar{g} A
+		\label{eq:MeanValueTheoremFG2D}
+	\end{equation}
+	
+	The \highlightbluetext{Boussinesq coefficients} $\alpha$ and $\beta$ are defined as
+	\begin{equation}
+		\int_A v^3 \, dA = \bar{v^3} A = \alpha \bar{v}^3 A
+	\end{equation}
+	and
+	\begin{equation}
+		\int_A v^2 \, dA = \bar{v^2} A = \beta \bar{v}^2 A
+	\end{equation}
+	
+	$\alpha$ and $\beta$ are close to 1 in turbulent flows but not in laminar flows. Laminar and turbulent flows will be introduced in Section \ref{sec:FluidFlows}.
+	
+	\newpage
+	
+	\section{Bernoulli Equation}
+	\label{sec:BernoulliEquation}
+	
+	\subsection{Bernoulli Equation}
+	\label{subsec:BernoulliEquation}
+	
+	In Subsection \ref{subsec:HydrostaticPressure}, we showed that
+	\begin{equation*}
+		\begin{cases}
+			\frac{\partial p}{\partial x} &= 0 \\
+			\frac{\partial p}{\partial y} &= 0 \\
+			\frac{\partial p}{\partial z} &= -\rho g
+		\end{cases}
+	\end{equation*}
+	and thus
+	\begin{align*}
+		\nabla p &= \langle 0, 0, -\rho g \rangle \\
+		-\nabla p-\rho g \hat{k} &= 0
+	\end{align*}
+	However, this is only true for bodies that are not moving. For moving bodies, we first consider \highlightbluetext{Newton's second law} for unit volume.
+	
+	\derivation{
+		\begin{align*}
+			\sum F_{\text{ext}} = -\nabla p-\rho g \hat{k} &= \frac{m}{\vol} \vec{a} \\
+			&= \rho \frac{D\vec{v}}{Dt}
+		\end{align*}
+		Define $\phi = g(z-z_0)$ and $\nabla \phi = g \hat{k}$.
+		\begin{equation*}
+			-\nabla p-\rho \nabla \phi = \rho \frac{D \vec{v}}{Dt}
+		\end{equation*}
+		Take the dot product with $\vec{v}$ on both sides, and then divide by $\rho$,
+		\begin{equation*}
+			-\frac{\vec{v}}{\rho} \cdot \nabla p-\vec{v} \cdot \nabla \phi = \vec{v} \cdot \frac{D\vec{v}}{Dt}
+		\end{equation*}
+		As $\vec{v} \cdot \frac{D\vec{v}}{Dt} = \left( \frac{\partial}{\partial t}+\vec{v} \cdot \nabla \right) \left( \frac{\vec{v}^2}{2} \right) = \left( \vec{v} \cdot \nabla \right) \left( \frac{\vec{v}^2}{2} \right)$ when steady flow,
+		\begin{align*}
+			-\frac{\vec{v}}{\rho} \cdot \nabla p-\vec{v} \cdot \nabla \phi &= \vec{v} \cdot \nabla \frac{\vec{v}^2}{2} \\
+			\frac{1}{\rho} \frac{D\vec{r}}{Dt} \cdot \nabla p+\frac{D\vec{r}}{Dt} \cdot \nabla \phi+\frac{D\vec{r}}{Dt} \cdot \nabla \frac{\vec{v}^2}{2} &= 0 \\
+			D \frac{\vec{v}^2}{2}+D \frac{p}{\rho}+D\phi &= 0 \\
+			\int_{[1]}^{[2]} 1 \, D \frac{\vec{v}^2}{2}+\int_{[1]}^{[2]} 1 \, D \frac{p}{\rho}+\int_{[1]}^{[2]} 1 \, D\phi &= 0
+		\end{align*}
+	}
+	\derivation{
+		Assume \highlightbluetext{incompressible flow},
+		\begin{align*}
+			\left. \frac{v^2}{2} \right]_{[2]}-\left. \frac{v^2}{2} \right]_{[1]}+\left. \frac{p}{\rho} \right]_{[2]}-\left. \frac{p}{\rho} \right]_{[1]}+\phi_2-\phi_1 &= 0 \\
+			\left( \frac{v^2}{2}+\frac{p}{\rho}+\phi \right)_2 &= \left( \frac{v^2}{2}+\frac{p}{\rho}+\phi \right)_1
+		\end{align*}
+		The equation can be rewritten as
+		\begin{equation}
+			\frac{v^2}{2}+\frac{p}{\rho}+gz = \mathcal{B}
+			\label{eq:BernoulliEquation}
+		\end{equation}
+		where $\mathcal{B}$ is called the \highlightbluetext{Bernoulli constant}.
+	}
+	This is called the \highlightbluetext{Bernoulli equation}. However, you may not notice that we made many \highlightbluetext{assumptions} in the derivation of the Bernoulli equation!
+	\begin{enumerate}
+		\item Frictionless flow
+		\item Steady flow
+		\item Incompressible flow
+		\item Along a streamline
+	\end{enumerate}
+	If the flow is \highlightbluetext{compressible}, then the Bernoulli equation becomes
+	\begin{equation}
+		\left( \frac{v^2}{2}+g(z-z_0) \right)_2-\left( \frac{v^2}{2}+g(z-z_0) \right)_1+\int_1^2 \frac{1}{\rho} \, dp = 0
+		\label{eq:BernoulliEquationCompressible}
+	\end{equation}
+	
+	\example{
+		Consider an aeroplane wing. We take a streamline that connects some points in front and above the wing. Denote the point in front of the wing by $\bf{1}$ and the point above the wing by $\bf{2}$. The wing is moving at a speed of $134 \unit{m/s}$. It is found that the velocity at $\bf{2}$ increases by 26\%, compared to $\bf{1}$. What is the pressure on top of the wing? The ambient pressure is $61,633 \unit{\pascal}$ and the density of air is $0.8191 \unit{kg/m\cubed}$.
+		
+		By the Bernoulli equation,
+		\begin{align*}
+			\frac{p_1}{\rho}+\frac{v_1^2}{2}+z_1 &= \frac{p_2}{\rho}+\frac{v_2^2}{2}+z_2 \\
+			\frac{61,633}{0.8191}+\frac{134^2}{2}+z_1 &= \frac{p_2}{61,633}+\frac{(134 \times 1.26)^2}{2}+z_2
+		\end{align*}
+	}
+	
+	\example{
+		Note that $z_1-z_2 \fallingdotseq 0$ because it is extremely small compared to $z_1$ and $z_2$ themselves. Therefore we get
+		\begin{equation*}
+			p_2 = 53,700 \unit{\pascal}
+		\end{equation*}
+		However, as $p = \rho RT \propto \rho$, due to some small density change.
+		
+		Nevertheless, this still shows that the pressure decreases when the velocity increases.
+	}
+	
+	Please be aware that the Bernoulli equation is not applicable \highlightbluetext{near ground} due to the assumption of \highlightbluetext{frictionless flow}. More details will be provided in Subsection \ref{subsec:LaminarAndTurbulentFlows}.
+	
+	\question{
+		Tall buildings have to withstand strong wind, especially those in typhoon-prone places such as Hong Kong. Typhoons often generate uplift forces on roofs, which cause them to be blown away. Explain it with Bernoulli's principle.
+	}
+	
+	\answer{
+		In the previous example of aeroplane wing we found that the pressure decreases when the velocity increases. Therefore, when wind blows on a building, a low-pressure region is created on top of the roof, while pressure of the the interior stays atmospheric. This induces a pressure gradient and thus an uplift force on the roof.
+	}
+	
+	\subsection{Streamline, Streakline and Pathline}
+	\label{subsec:StreamlineStreaklineAndPathline}
+	
+	\highlightbluetext{Streamline} is a line connecting velocity vectors smoothly. If you take the tangent to the streamline at a point, you get the velocity vector of that fluid particle.
+	
+	\highlightbluetext{Streakline} is a collection of all paths by fluid particles that have passed through a point. It is easily observable.
+	
+	\highlightbluetext{Pathline} is the path (or trajectory) that one particle follows over a period of time.
+	
+	Streamline, streakline and pathline are identical in \highlightbluetext{steady flow}. They only differ in unsteady flow.
+	
+	\question{
+		We see smoke from a fire. Is it streamline, streakline, or pathline?
+	}
+	
+	\answer{
+		Streakline.
+	}
+	
+	\newpage
+	
+	\section{Navier-Stokes Equation}
+	\label{sec:NavierStokesEquation}
+	
+	\subsection{Navier-Stokes Equation}
+	\label{subsec:NavierStokesEquation}
+	
+	The \highlightbluetext{Navier-Stokes equation} is a \highlightbluetext{partial differential equation} that describes the motion of fluid. Let's derive it from \highlightbluetext{mass and momentum conservation}.
+	\derivation{
+		\begin{tikzpicture}
+			\begin{axis}[axis lines = middle, only marks,
+				xmin = 0, xmax = 6,	ymin = 0, ymax = 4,
+				xtick = {1.7, 4.5}, xticklabels = {$x$, $x+\Delta x$},
+				ytick = {1.5, 3}, yticklabels = {$y$, $y+\Delta y$},
+				xlabel = {$x$}, ylabel = {$y$}]
+				\draw[thick] (axis cs:1.7, 1.5) -- (axis cs:1.7, 3) -- (axis cs:4.5, 3) -- (axis cs:4.5, 1.5) -- cycle;
+				\draw[thick, dashed] (axis cs:1.7, 1.5) -- (axis cs:1.7, 0);
+				\draw[thick, dashed] (axis cs:4.5, 1.5) -- (axis cs:4.5, 0);
+				\draw[thick, dashed] (axis cs:1.7, 1.5) -- (axis cs:0, 1.5);
+				\draw[thick, dashed] (axis cs:1.7, 3) -- (axis cs:0, 3);
+				\draw[thick, -implies, double equal sign distance] (axis cs:1.4, 2.25) -- (axis cs:2, 2.25);
+				\draw[thick, -implies, double equal sign distance] (axis cs:3.1, 1.2) -- (axis cs:3.1, 1.8);
+				\draw[thick, -implies, double equal sign distance] (axis cs:4.2, 2.25) -- (axis cs:4.8, 2.25);
+				\draw[thick, -implies, double equal sign distance] (axis cs:3.1, 2.7) -- (axis cs:3.1, 3.3);
+				\node at (axis cs:1.2, 2.25) {$u$};
+				\node at (axis cs:3.1, 1) {$v$};
+				\node at (axis cs:4, 2.25) {$u$};
+				\node at (axis cs:3.1, 2.5) {$v$};
+				\node at (axis cs:1.5, 2.8) {1};
+				\node at (axis cs:4.3, 1.3) {3};
+				\node at (axis cs:4.7, 2.8) {2};
+				\node at (axis cs:4.3, 3.2) {4};
+			\end{axis}
+		\end{tikzpicture} \\
+		We take a \highlightbluetext{fixed control volume}. The mass conservation states that
+		\begin{align*}
+			\frac{\partial}{\partial t} \int_\Omega \rho \, d\vol+\int_1 \rho \vec{v} \cdot \vec{n} \, dA+\int_2 \rho \vec{v} \cdot \vec{n} \, dA+\int_3 \rho \vec{v} \cdot \vec{n} \, dA+\int_4 \rho \vec{v} \cdot \vec{n} \, dA &= 0 \\
+			\frac{\partial }{\partial t} (\rho \Delta y \Delta x)+\int_1 \rho(u\hat{\imath} \cdot (-\hat{\imath})) \, dA+\int_2 \rho(u\hat{\imath} \cdot \hat{\imath}) \, dA+\int_3 \rho(v\hat{\jmath} \cdot (-\hat{\jmath})) \, dA+\int_4 \rho(v\hat{\jmath} \cdot \hat{\jmath}) \, dA &= 0 \\
+			\Delta x \Delta y \frac{\partial \rho}{\partial t}-\rho u \big|_x \Delta y+\rho u \big|_{x+\Delta x} \Delta y-\rho v \big|_y \Delta x+\rho v \big|_{y+\Delta y} \Delta x &= 0 \\
+			 \frac{\partial \rho}{\partial t}-\frac{\rho u \big|_x}{\Delta x}+\frac{\rho u \big|_{x+\Delta x}}{\Delta x}-\frac{\rho v \big|_y}{\Delta y}+\frac{\rho v \big|_{y+\Delta y}}{\Delta x} &= 0
+		\end{align*}
+		Take $(\Delta x, \Delta y) \to (0, 0)$.
+		\begin{align*}
+			\frac{\partial \rho}{\partial t}+\frac{\partial \rho u}{\partial x}+\frac{\partial \rho v}{\partial y} &= 0 \\
+			\frac{\partial \rho}{\partial t}+\rho \frac{\partial u}{\partial x}+u \frac{\partial \rho}{\partial x}+\rho \frac{\partial v}{\partial y}+v \frac{\partial \rho}{\partial y} &= 0 \\
+			\left( \frac{\partial \rho}{\partial t}+u \frac{\partial \rho}{\partial x}+v \frac{\partial \rho}{\partial y} \right)+\rho \left( \frac{\partial u}{\partial x}+\frac{\partial v}{\partial y} \right) &= 0 \\
+			\frac{D\rho}{Dt}+\rho \left( \frac{\partial u}{\partial x}+\frac{\partial v}{\partial y} \right) &= 0
+		\end{align*}
+	}
+	
+	\newpage
+	
+	\derivation{
+		Assume \highlightbluetext{incompressible flow}, $\frac{D\rho}{Dt} = 0$. Then $\frac{\partial u}{\partial x}+\frac{\partial v}{\partial y} = \nabla \cdot \vec{v} = 0$.
+		
+		Now we consider \highlightbluetext{momentum conservation}. Let the \highlightbluetext{normal stresses} on surfaces 1, 2, 3, and 4 be $-\sigma_{xx}$, $\sigma_{xx}$, $-\sigma_{yy}$, and $\sigma_{yy}$, respectively. Let the \highlightbluetext{shear stresses} on surface 2 and 4 be $\tau_{xy}$ and $\tau_{yx}$ respectively. Let the \highlightbluetext{external forces} be $f_x$ and $f_y$. We choose a \highlightbluetext{material control volume}. All momentum fluxes equal 0.
+		\begin{align*}
+			\frac{d}{dt} \int_\Omega \rho \vec{v} \, d\vol &= (\sigma_{xx}(x+\Delta x)\Delta y-\sigma_{xx}(x)\Delta y+\tau_{yx}(y+\Delta y)\Delta x-\tau_{xy}(y)\Delta x+f_x \Delta x \Delta y) \hat{\imath}+ \\
+			&(\sigma_{yy}(y+\Delta y)\Delta x-\sigma_{yy}(y)\Delta x+\tau_{xy}(x+\Delta x)\Delta y-\tau_{yx}(x)\Delta y+f_y \Delta y \Delta x) \hat{\jmath} \\
+			\rho \frac{D\vec{v}}{Dt} &= \left( \frac{\sigma_{xx}(x+\Delta x)-\sigma_{xx}(x)}{\Delta x}+\frac{\tau_{yx}(y+\Delta y)-\tau_{xy}(y)}{\Delta y}+f_x \right) \hat{\imath}+ \\
+			&\left( \frac{\sigma_{yy}(y+\Delta y)-\sigma_{yy}(y)}{\Delta y}+\frac{\tau_{xy}(x+\Delta x)-\tau_{yx}(x)}{\Delta x}+f_y \right) \hat{\jmath} \\
+			\rho \left( \frac{Du}{Dt} \hat{\imath}+\frac{Dv}{Dt} \hat{\jmath} \right) &= \left( \frac{\partial}{\partial x} \sigma_{xx}+\frac{\partial}{\partial y} \tau_{yx}+f_x \right) \hat{\imath}+\left( \frac{\partial}{\partial y} \sigma_{yy}+\frac{\partial}{\partial x} \tau_{xy}+f_y \right) \hat{\jmath}
+		\end{align*}
+		Let's now consider a rectangle with height $\Delta y$. Its bottom edge moves with speed $u(y)$, but the top edge moves with speed $u(y+\Delta y)$. After time $t$, the rectangle will then deform into a \highlightbluetext{parallelogram} with slant edges. Let the angle between the slant edge and the vertical be $\phi$.
+		\begin{align*}
+			\tan \phi &= \frac{u(y+\Delta y)t-u(y)t}{\Delta y} \\
+			          &= \frac{\partial u}{\partial y} t
+		\end{align*}
+		For small $\phi$, $\tan \phi \fallingdotseq \phi = \frac{\partial u}{\partial y} t$. The shear stress $\phi$ is defined to be $\tau = \frac{\partial}{\partial t} \mu \phi = \mu \frac{\partial u}{\partial y}$.
+		
+		Similarly, for 2D case,
+		\begin{equation*}
+			\tau_{xy} = \tau_{yx} = \frac{d}{dt} \mu (\phi_x+\phi_y) = \mu \left( \frac{\partial u}{\partial y}+\frac{\partial v}{\partial x} \right)
+		\end{equation*}
+		
+		And for the normal stresses,
+		\begin{equation*}
+			\begin{cases}
+				\sigma_{xx} &= 2\mu \frac{\partial u}{\partial x}+\lambda \frac{D\rho}{Dt}-p \\
+				\sigma_{yy} &= 2\mu \frac{\partial v}{\partial y}+\lambda \frac{D\rho}{Dt}-p
+			\end{cases}
+		\end{equation*}
+		where $\lambda$ and $\mu$ are called the \highlightbluetext{Lamé parameters}.
+	}
+	
+	\newpage
+	
+	\derivation{
+		Substituting these expressions back,
+		\begin{equation*}
+				\rho \frac{Du}{Dt} = -\frac{\partial p}{\partial x}+\mu \left( \frac{\partial^2 u}{\partial x^2}+\frac{\partial^2 u}{\partial y^2}+f_x \right)
+		\end{equation*}
+		and
+		\begin{equation*}
+			\rho \frac{Dv}{Dt} = -\frac{\partial p}{\partial y}+\mu \left( \frac{\partial^2 v}{\partial x^2}+\frac{\partial^2 v}{\partial y^2}+f_y \right)
+		\end{equation*}
+		for $x$ and $y$ directions respectively.
+		
+		Combining them gives a compact form.
+		\begin{equation}
+			\rho \frac{D\vec{v}}{Dt} = -\nabla p+\mu \nabla^2 \vec{v}+\vec{F}
+		\end{equation}
+		This is the \highlightbluetext{Navier-Stokes equation}.
+	}
+	
+	\newpage
+	
+	\section{Fluid Flows}
+	\label{sec:FluidFlows}
+	
+	\subsection{Velocity Profile}
+	\label{subsec:VelocityProfile}
+	
+	Let's consider an \highlightbluetext{open channel} running downwards on a slope with angle $\theta$. In the Navier-Stokes equation derivation, we know that $v = \frac{\partial u}{\partial x}+\frac{\partial v}{\partial y} = 0$. As there is no flow upwards along the $y$ axis, $\frac{\partial v}{\partial y} = 0$. $\frac{\partial u}{\partial x}$ equals 0 and thus $u$ is not a function of $x$. Assuming \highlightbluetext{steady flow}, $u$ is not a function of time $t$ either. Therefore, $u$ only depends on the water depth $y$.
+	\begin{equation*}
+		\frac{Du}{Dt} = \cancelto{0}{\frac{\partial u}{\partial t}}+\cancelto{0}{u\frac{\partial u}{\partial x}}+\cancelto{0}{v\frac{\partial u}{\partial y}} = 0
+	\end{equation*}
+	By the $x$ direction Navier-Stokes equation,
+	\begin{align*}
+		\rho \cancelto{0}{\frac{Du}{Dt}} &= \cancelto{0}{-\frac{\partial p}{\partial x}}+\mu \left( \cancelto{0}{\frac{\partial^2 u}{\partial x^2}}+\frac{\partial^2 u}{\partial y^2} \right)+f_x \\
+		0 &= \mu \frac{\partial^2 u}{\partial y^2}+f_x \\
+		\mu \frac{\partial^2 u}{\partial y^2} &= -\rho g \sin \theta
+	\end{align*}
+	as the fluid is subjected to \highlightbluetext{downwards gravitational force}. The above second-order partial differential equation can be solved by integrating twice, resulting in a \highlightbluetext{quadratic polynomial}.
+	
+	Let $u = ay^2+by+c$. How can we find the coefficients $a$, $b$, and $c$? We can make use of the \highlightbluetext{boundary conditions}.
+	
+	$u(0) = 0$ due to \highlightbluetext{no-slip condition}. $c$ is therefore 0.
+	
+	Differentiating $u$ twice gives
+	\begin{align*}
+		u'' = 2a &= -\frac{\rho g \sin \theta}{\mu} \\
+		a &= -\frac{\rho g \sin \theta}{2\mu}
+	\end{align*}
+	
+	Notice that $u$ attains its \highlightbluetext{maximum value} at the fluid surface (when $y = h$).
+	\begin{align*}
+		u'(h) &= -\frac{\rho g \sin \theta}{\mu} h+b \\
+		b &= \frac{\rho g \sin \theta h}{\mu}
+	\end{align*}
+	
+	Substituting the coefficients back,
+	\begin{equation*}
+		u = -\frac{\rho g \sin \theta}{2\mu} y^2+\frac{\rho g \sin \theta h}{\mu} y
+	\end{equation*}
+	or
+	\begin{equation}
+		u = \frac{\rho g \sin \theta}{2\mu} (2h-y)y
+		\label{eq:OpenChannelFlowVelocity}
+	\end{equation}
+	Using Equation \ref{eq:OpenChannelFlowVelocity}, we can easily find the \highlightbluetext{flow rate per unit width} $q$.
+	\begin{align*}
+		q &= \int_0^h u(y) \, dA \\
+		  &= \int_0^h \frac{\rho g \sin \theta}{2\mu} (2h-y)y \, dy
+	\end{align*}
+	which gives
+	\begin{equation}
+		q = \frac{\rho g}{3\mu} \sin \theta h^3
+		\label{eq:OpenChannelFlowRate}
+	\end{equation}
+	We define the \highlightbluetext{slope} of the channel to be $S_0 \fallingdotseq \sin \theta \fallingdotseq \tan \theta$.
+	
+	The \highlightbluetext{average velocity} is given by
+	\begin{equation*}
+		\bar{u} = \frac{q}{h} = \frac{\rho}{3\mu} gS_0 h^2
+	\end{equation*}
+	and the slope is
+	\begin{equation*}
+		S_0 = \frac{3\mu \bar{u}}{\rho gh^2}
+	\end{equation*}
+	In the derivation of the Navier-Stokes equation, we made use of the \highlightbluetext{shear stress} $\tau_{yx}$. Now we can calculate its value.
+	\begin{align*}
+		\tau_{yx} &= \mu \left( \frac{\partial u}{\partial x}+\frac{\partial v}{\partial y} \right) \\
+		&= \rho gS_0(h-y)
+	\end{align*}
+	The \highlightbluetext{shear stress} at the \highlightbluetext{ground} is
+	\begin{equation}
+		\tau_{\text{ground}} = \rho gS_0 h = \frac{3\mu \bar{u}}{h}
+		\label{eq:OpenChannelShearStress}
+	\end{equation}
+	
+	\subsection{Darcy-Weisbach Equation}
+	\label{subsec:DarcyWeisbachEquation}
+	
+	The \highlightbluetext{Darcy-Weisbach equation} for \highlightbluetext{open channel} is
+	\begin{equation}
+		\tau_{\text{ground}} = \rho f \frac{\bar{u}^2}{8}
+		\label{eq:DarcyWeisbachOpenChannel}
+	\end{equation}
+	Combining with Equation \ref{eq:OpenChannelShearStress}, we get an expression for the \highlightbluetext{Darcy friction factor} $f$.
+	\begin{align*}
+		f &= \frac{24\mu}{\rho h \bar{u}} \\
+		  &\propto \frac{1}{\frac{\rho h \bar{u}}{\mu}}
+	\end{align*}
+	The ratio $\frac{\rho h \bar{u}}{\mu}$ is so often used that it was given a name, the \highlightbluetext{Reynolds number} $Re$.
+	\begin{equation}
+		Re = \frac{\rho L \bar{u}}{\mu}
+		\label{eq:ReynoldsNumber}
+	\end{equation}
+	where $L$ is the \highlightbluetext{diameter} of a pipe or \highlightbluetext{water depth} in open channels.
+	
+	Note that Equation \ref{eq:DarcyWeisbachOpenChannel} is only valid for open channels. For other flows, we have
+	\begin{equation*}
+		f = \frac{64}{Re} \text{ for circular pipe}
+	\end{equation*}
+	and
+	\begin{equation*}
+		f = \frac{126}{Re} \text{ for triangular pipe}
+	\end{equation*}
+	
+	\subsection{Laminar and Turbulent Flows}
+	\label{subsec:LaminarAndTurbulentFlows}
+	
+	The \highlightbluetext{velocity profile} of a \highlightbluetext{laminar flow} in a circular pipe is
+	\begin{equation}
+		u(r) = \frac{dp}{dz} \frac{1}{4\mu} \left( r^2-R^2 \right)
+		\label{eq:VelocityProfileLaminarFlowCircularPipe}
+	\end{equation}
+	
+	In contrast, it is difficult to set up an equation to describe the velocity profile of a \highlightbluetext{turbulent flow}.
+	
+	Ranges of the Reynolds number and the corresponding types of flow is given by
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{cc}
+			\textbf{Reynolds Number} & \textbf{Type of Flow} \\
+			\hline
+			$\leq 2000$ & Laminar \\
+			$2000 \sim 4000$ & Transitional \\
+			$\geq 4000$ & Turbulent \\
+		\end{tabular}
+	\end{table}
+	
+	\question{
+		What are some usages of turbulent flow?
+	}
+	
+	\answer{
+		Mixing of pollutants in water and air, stirring and dissolving sugar in tea...
+	}
+	
+	\remarks{
+		The instantaneous velocity profile of a turbulent flow has numerous chaotic fluctuations with significant variations in velocity magnitude. The time-averaged velocity profile is more smooth and it shapes like a round-angled rectangle.
+	}
+	
+	In Subsection \ref{subsec:BernoulliEquation}, it is noted that the Bernoulli equation is \highlightbluetext{not applicable} near ground due to the assumption of \highlightbluetext{frictionless flow}. In this Subsection, we know that the slope of the velocity near ground is relatively large. By the $x$ direction \highlightbluetext{Navier-Stokes equation},
+	\begin{equation*}
+		\rho \frac{Du}{Dt} = -\frac{\partial p}{\partial x}+\overbrace{\mu \left( \frac{\partial^2 u}{\partial x^2}+\frac{\partial^2 u}{\partial y^2} \right)}^{\text{friction}}+f(x)
+	\end{equation*}
+	The friction is large, and thus the Bernoulli equation is not applicable near ground.
+	
+	Moreover, it is also not applicable to \highlightbluetext{turbulent flows} as turbulent flows are \highlightbluetext{unsteady}, which is contradictory to the assumption of \highlightbluetext{steady flow}.
+	
+	The flow field in a turbulent flow can be divided into three layers as follows.
+	\begin{center}
+		\begin{tikzpicture}
+			\begin{axis}[axis lines = middle, only marks,
+				xmin = 0, xmax = 6,	ymin = 0, ymax = 4,
+				xtick = {}, xticklabels = {},
+				ytick = {0.5, 1.5}, yticklabels = {$y'$, $y''$},
+				xlabel = {$x$}, ylabel = {$y$}]
+				\draw[thick, dashed] (axis cs:0, 0.5) -- (axis cs: 6, 0.5);
+				\draw[thick, dashed] (axis cs:0, 1.5) -- (axis cs:6, 1.5);
+				\node at (axis cs:1.5, 0.25) {Laminar};
+				\node at (axis cs:1.5, 1) {Transitional};
+				\node at (axis cs:1.5, 2.75) {Turbulent};
+				\fill [fill = {rgb, 255:red, 137; green, 207; blue, 240}, nearly transparent] (axis cs:0, 0) rectangle (axis cs:6, 0.5);
+				\fill [fill = {rgb, 255:red, 42; green, 169; blue, 227}, nearly transparent] (axis cs:0, 0.5) rectangle (axis cs:6, 1.5);
+				\fill [fill = {rgb, 255:red, 19; green, 104; blue, 143}, nearly transparent] (axis cs:0, 1.5) rectangle (axis cs:6, 4);
+			\end{axis}
+		\end{tikzpicture}
+	\end{center}
+	The laminar layer is very thin ($\sim$ a few millimetres).
+	
+	We can also classify turbulent flows based on the \highlightbluetext{roughness} of wall.
+	\begin{enumerate}
+		\item $\epsilon < y'$: Smooth flow.
+		\item $y' < \epsilon < y''$: Transitional flow.
+		\item $\epsilon > y''$: Rough flow.
+	\end{enumerate}
+	
+	\subsection{Reynolds Experiment}
+	\label{subsec:ReynoldsExperiment}
+	
+	The \highlightbluetext{Reynolds experiment} involves a coloured water streak enters a clear water flow. It is found out that
+	\begin{enumerate}
+		\item $Re \ll 2000$: The coloured water streak flows in a nearly \highlightbluetext{straight line} throughout the tube. The flow is \highlightbluetext{laminar}.
+		\item $Re \sim 2000$: The coloured water streak starts to \highlightbluetext{oscillate slightly}, but it's still not mixed completely with the surroundings. The flow is still \highlightbluetext{laminar}.
+		\item $Re \gg 2000$: The coloured water streak \highlightbluetext{oscillates heavily}, and its amplitude grows with increasing distance from the injection point. The fluid motion is highly disordered. The flow is now \highlightbluetext{turbulent}.
+	\end{enumerate}
+	
+	\subsection{Moody Diagram}
+	\label{subsec:MoodyDiagram}
+	
+	Remember the \highlightbluetext{Darcy friction factors} for \highlightbluetext{laminar flow} in open channels and pipes?
+	\begin{equation*}
+		f = \frac{24}{Re} \text{ for open channel}
+	\end{equation*}
+	and
+	\begin{equation*}
+		f = \frac{64}{Re} \text{ for circular pipe}
+	\end{equation*}
+	They are nice and neat. However, the \highlightbluetext{Darcy friction factor} expression for \highlightbluetext{turbulent flow} is monstrous and horrible.
+	\begin{equation}
+		\frac{1}{\sqrt f} = -2\log \left( \frac{\epsilon}{3.7D}+\frac{2.51}{Re\sqrt f} \right)
+		\label{eq:DarcyFrictionFactorTurbulent}
+	\end{equation}
+	where $\epsilon$ is the average height of roughness of the pipe material. For coarse concrete it's about $0.25 \unit{\milli \metre}$. For cast iron it's about $0.15 \unit{\milli \metre}$.
+	
+	Equation \ref{eq:DarcyFrictionFactorTurbulent} is called the \highlightbluetext{Colebrook equation}.
+	
+	The \highlightbluetext{Moody diagram} is a \emph{relatively} easier way to find the Darcy friction factor for a turbulent flow. Just follow the curve with the desired \highlightbluetext{roughness} $\frac{\epsilon}{D}$, trace it backwards and read the \highlightbluetext{Reynolds number} and the corresponding \highlightbluetext{Darcy friction factor}.
+	
+	\subsection{Hydraulic Head}
+	\label{subsec:HydraulicHead}
+	
+	Consider a flow from point 1 to 2. The \highlightbluetext{hydraulic head} equation is given by
+	\begin{equation}
+		\overbrace{\underbrace{\frac{\bar{p}_1}{\rho g}}_{\text{Pressure head}}+\underbrace{\bar{z}_1}_{\text{Elevation head}}+\underbrace{\frac{\bar{v}_1^2}{2g}}_{\text{Velocity head}}}^{H_1} = \overbrace{\frac{\bar{p}_2}{\rho g}+\bar{z}_2+\frac{\bar{v}_2^2}{2g}}^{H_2}+\overbrace{\frac{U_2-U_1}{g}}^{H_{\text{loss}}}
+		\label{eq:HydraulicHead}
+	\end{equation}
+	and the head loss $H_{\text{loss}}$ can be expressed as
+	\begin{equation}
+		H_{\text{loss}} = \frac{fL_{\text{max}}}{D} \frac{\bar{v}^2}{2g}
+	\end{equation}
+	This is \emph{very} similar to the \highlightbluetext{Bernoulli equation}, but they are different and do not mix up them. The Bernoulli equation is derived from \highlightbluetext{momentum conservation} along a streamline, while the hydraulic head equation is about \highlightbluetext{energy conservation}.
+	
+	\example{
+		\begin{minipage}[c]{5.5cm}
+			\scalebox{0.8}{
+				\begin{tikzpicture}
+					\draw[ultra thick] (0, 4) -- (0, 0) -- (3, 0) -- (3, 1) -- (6, 1);
+					\draw[ultra thick] (3, 4) -- (3, 1.5) -- (6, 1.5);
+					\draw[thick, dashed] (0, 1.25) -- (6, 1.25);
+					\draw[ultra thick] (0, 3.25) -- (3, 3.25);
+					\draw[thick, <->, >=stealth] (1.25, 3.25) -- (1.25, 1.25);
+					\node at (1.7, 2.25) {$70 \unit{\metre}$};
+					\node at (4.5, 1.75) {Cast iron};
+					\node at (4.5, 0.75) {$D = 500 \unit{\milli \metre}$};
+					\draw[thick, <->, >=stealth] (3, -0.25) -- (6, -0.25);
+					\node at (4.5, -0.5) {$50,000 \unit{\metre}$};
+					\draw[thick, dashed] (3, 3.25) -- (6, 3.25);
+					\draw[thick, dashed] (3, 3.25) -- (6, 1);
+					\node at (3.25, 3.5) {1};
+					\node at (6, 1.75) {2};
+				\end{tikzpicture}
+			}
+		\end{minipage}
+		\begin{minipage}[c]{\textwidth-5.5cm}
+			By the hydraulic head equation,
+			\begin{align*}
+				\frac{\bar{p}_1}{\rho g}+\bar{z}_1+\frac{\bar{v}_1^2}{2g} &= \frac{\bar{p}_2}{\rho g}+\bar{z}_2+\frac{\bar{v}_2^2}{2g}+\frac{fL_{\text{max}}}{D} \frac{\bar{v}^2}{2g} \\
+				0+70+0 &= 0+0+\frac{\bar{v}_2^2}{2g}+\frac{fL_{\text{max}}}{D} \frac{\bar{v}^2}{2g} \\
+				70 &= \left( 1+f\frac{L_{\text{max}}}{D} \right) \frac{\bar{v}_2^2}{2g} \\
+				70 &= \left( 1+0.0014 \times \frac{50,000}{0.5} \right) \frac{\bar{v}_2^2}{2 \times 9.81}
+			\end{align*}
+			which shows the \highlightbluetext{velocity head} is \highlightbluetext{negligible} comparing to the head loss. We assumed rough turbulence, and $\frac{\epsilon}{D} = \frac{0.00015}{0.5} = 0.0003$. Using the Moody diagram, we found the Darcy friction factor $f$ to be 0.0014. The velocity at 2 is
+			\begin{equation*}
+				\bar{v}_2 = 3.1 \unit{m/s}
+			\end{equation*}
+			and the Reynolds number is
+			\begin{align*}
+				Re &= \frac{\rho VD}{\mu} \\
+				&= \frac{1000 \times 3.1 \times 0.5}{10^{-3}} \\
+				&= \num{1.5e6}
+			\end{align*}
+			which is in the \highlightbluetext{turbulent flow} regime.
+		\end{minipage}
+	}
+	
+	\newpage
+	
+	\section{Appendix}
+	
+	Material Derivative
+	\begin{equation*}
+		\frac{Df}{Dt} = \frac{\partial f}{\partial t}+v_x \frac{\partial f}{\partial x}+v_y \frac{\partial f}{\partial y}+v_z \frac{\partial f}{\partial z} = \frac{\partial f}{\partial t}+\textbf{u} \cdot \nabla f
+	\end{equation*}
+	
+	General Derivative
+	\begin{equation*}
+		\frac{df}{dt} = \frac{\partial f}{\partial t}+w_x\frac{\partial f}{\partial x} +w_y\frac{\partial f}{\partial y}+w_z\frac{\partial f}{\partial z} = \frac{\partial f}{\partial t}+\dot{\textbf{x}} \cdot \nabla f
+	\end{equation*}
+	
+	General Balance Equation
+	\begin{equation*}
+		\frac{d\Psi}{dt} = \dot{\Psi}_{\text{in}}-\dot{\Psi}_{\text{out}}+\dot{S}_\Psi+\dot{G}_\Psi
+	\end{equation*}
+	
+	Mass Conservation
+	\begin{equation*}
+		\frac{d}{dt} \int_\Omega \rho \, d\vol+\int_\Gamma \rho (\vec{v}-\vec{w}) \cdot \vec{n} \, dA = 0
+	\end{equation*}
+	
+	Momentum Conservation
+	\begin{equation*}
+		\frac{d}{dt} \int_\Omega \rho \vec{v} \, d\vol+\int_\Gamma \rho \vec{v} (\vec{v}-\vec{w}) \cdot \vec{n} \, dA = \sum \vec{F}_{\text{ext}}
+	\end{equation*}
+	
+	Energy Conservation
+		\begin{equation*}
+		\frac{d}{dt} \int_\Omega e \, d\vol+\int_\Gamma e(\vec{v}-\vec{w}) \cdot \vec{n} \, dA = \dot{W}+\dot{\Theta}
+	\end{equation*}
+	
+	\noindent\rule{\textwidth}{0.5pt}
+	
+	Hydraulic Bore Velocity
+	\begin{equation*}
+		v_1+c = \pm \sqrt{g\frac{y_1+y_2}{2} \frac{y_2}{y_1}}
+	\end{equation*}
+	
+	Hydraulic Bore Internal Energy
+	\begin{equation*}
+		U_2-U_1 = g\frac{(y_2-y_1)^3}{4y_1y_2}
+	\end{equation*}
+	
+	Hydrostatic Force on Inclined Surface
+	\begin{equation*}
+		F = \rho g \sin \theta H_c A
+	\end{equation*}
+	
+	Centre of Pressure
+	\begin{equation*}
+		H_{cp} = H_c+\frac{\bar{I_x}}{H_c A}
+	\end{equation*}
+	
+	Buoyancy Force
+	\begin{equation*}
+		F_B = \rho g \vol_{\text{displaced}}
+	\end{equation*}
+	
+	\noindent\rule{\textwidth}{0.5pt}
+	
+	Boussinesq Coefficients
+	\begin{equation*}
+		\int_A v^3 \, dA = \bar{v^3} A = \alpha \bar{v}^3 A
+	\end{equation*}
+	\begin{equation*}
+		\int_A v^2 \, dA = \bar{v^2} A = \beta \bar{v}^2 A
+	\end{equation*}
+	
+	\noindent\rule{\textwidth}{0.5pt}
+	
+	Bernoulli Equation
+	\begin{equation*}
+		\frac{p_1}{\rho}+\frac{v_1^2}{2}+z_1 = \frac{p_2}{\rho}+\frac{v_2^2}{2}+z_2
+	\end{equation*}
+	
+	Navier-Stokes Equation
+	\begin{equation*}
+		\rho \frac{Du}{Dt} = -\frac{\partial p}{\partial x}+\mu \left( \frac{\partial^2 u}{\partial x^2}+\frac{\partial^2 u}{\partial y^2}+f_x \right)
+	\end{equation*}
+	\begin{equation*}
+		\rho \frac{Dv}{Dt} = -\frac{\partial p}{\partial y}+\mu \left( \frac{\partial^2 v}{\partial x^2}+\frac{\partial^2 v}{\partial y^2}+f_y \right)
+	\end{equation*}
+	\begin{equation*}
+		\rho \frac{D\vec{v}}{Dt} = -\nabla p+\mu \nabla^2 \vec{v}+\vec{F}
+	\end{equation*}
+	
+	\noindent\rule{\textwidth}{0.5pt}
+	
+	Open Channel
+	\begin{align*}
+		u &= \frac{\rho g \sin \theta}{2\mu} (2h-y)y \\
+		q &= \frac{\rho g}{3\mu} \sin \theta h^3 \\
+		S_0 &= \frac{3\mu \bar{u}}{\rho gh^2} \\
+		\tau_{yx} &= \rho gS_0(h-y) \\
+		\tau_{\text{ground}} &= \rho gS_0 h = \frac{3\mu \bar{u}}{h}
+	\end{align*}
+	
+	Darcy-Weisbach Equation for Open Channel
+	\begin{equation*}
+		\tau_{\text{ground}} = \rho f \frac{\bar{u}^2}{8}
+	\end{equation*}
+	
+	Reynolds Number
+	\begin{equation*}
+		Re = \frac{\rho L \bar{u}}{\mu}
+	\end{equation*}
+	
+	Laminar Flow Velocity Profile in Circular Pipe
+	\begin{equation*}
+		u(r) = \frac{dp}{dz} \frac{1}{4\mu} \left( r^2-R^2 \right)
+	\end{equation*}
+	
+	Hydraulic Head
+	\begin{equation*}
+		\frac{\bar{p}_1}{\rho g}+\bar{z}_1+\frac{\bar{v}_1^2}{2g} = \frac{\bar{p}_2}{\rho g}+\bar{z}_2+\frac{\bar{v}_2^2}{2g}
+	\end{equation*}
+	
+\end{document}
